@@ -23,26 +23,16 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Override system JAVA_HOME
-        shell: powershell
-        run: |
-          echo "JAVA_HOME=$env:JAVA_HOME_21_X64" >> $env:GITHUB_ENV
-          echo "$env:JAVA_HOME_21_X64\bin" >> $env:GITHUB_PATH
-
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      - name: Download and install SonarScanner & Build Wrapper
+      - name: Download Build Wrapper
         shell: powershell
         run: |
           New-Item -Path .sonar -ItemType Directory -Force
           $wrapperUrl = "https://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip"
           Invoke-WebRequest -Uri $wrapperUrl -OutFile .sonar\build-wrapper.zip
           Expand-Archive -Path .sonar\build-wrapper.zip -DestinationPath .sonar\build-wrapper -Force
-          
-          $scannerUrl = "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip"
-          Invoke-WebRequest -Uri $scannerUrl -OutFile .sonar\sonar-scanner.zip
-          Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
 
       - name: Build all projects with Build Wrapper
         shell: powershell
@@ -61,11 +51,8 @@ jobs:
             & $bwPath --out-dir bw-output msbuild "$($target.FullName)" /p:Configuration=Release /p:Platform="x64"
           }
 
-      - name: Run SonarScanner
+      - name: Run SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          $scannerPath = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner.bat" -Recurse | Select-Object -ExpandProperty FullName
-          & $scannerPath
