@@ -1,0 +1,48 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Download and install SonarScanner & Build Wrapper
+        shell: powershell
+        run: |
+          New-Item -Path .sonar -ItemType Directory -Force
+          $wrapperUrl = "https://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip"
+          Invoke-WebRequest -Uri $wrapperUrl -OutFile .sonar\build-wrapper.zip
+          Expand-Archive -Path .sonar\build-wrapper.zip -DestinationPath .sonar\build-wrapper -Force
+          
+          $scannerUrl = "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip"
+          Invoke-WebRequest -Uri $scannerUrl -OutFile .sonar\sonar-scanner.zip
+          Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
+
+      - name: Build project with Build Wrapper
+        shell: powershell
+        run: |
+          $bwPath = Get-ChildItem -Path .sonar\build-wrapper -Filter "build-wrapper-win-x86-64.exe" -Recurse | Select-Object -ExpandProperty FullName
+          & $bwPath --out-dir bw-output msbuild /p:Configuration=Release
+
+      - name: Run SonarScanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          $scannerPath = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner.bat" -Recurse | Select-Object -ExpandProperty FullName
+          & $scannerPath
