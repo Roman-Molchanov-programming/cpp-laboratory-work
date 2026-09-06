@@ -32,11 +32,23 @@ jobs:
           Invoke-WebRequest -Uri $scannerUrl -OutFile .sonar\sonar-scanner.zip
           Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
 
-      - name: Build project with Build Wrapper
+      - name: Build all solutions with Build Wrapper
         shell: powershell
         run: |
           $bwPath = Get-ChildItem -Path .sonar\build-wrapper -Filter "build-wrapper-win-x86-64.exe" -Recurse | Select-Object -ExpandProperty FullName
-          & $bwPath --out-dir bw-output msbuild /p:Configuration=Release
+          
+          # Находим все файлы .slnx и .sln во всех подпапках
+          $solutions = Get-ChildItem -Path . -Include *.slnx, *.sln -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' }
+          
+          if ($solutions.Count -eq 0) {
+            Write-Error "Файлы решений (.slnx / .sln) не найдены!"
+            exit 1
+          }
+
+          foreach ($sol in $solutions) {
+            Write-Host "Сборка решения: $($sol.FullName)"
+            & $bwPath --out-dir bw-output msbuild "$($sol.FullName)" /p:Configuration=Release /p:Platform="x64"
+          }
 
       - name: Run SonarScanner
         env:
