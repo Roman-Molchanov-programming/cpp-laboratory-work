@@ -2,25 +2,21 @@
 
 // Методы Carriage
 
-Carriage::Carriage() {
-    type = "Неизвестно";
-    number = 0;
+Carriage::Carriage() : type("Неизвестно"), number(0) {
 }
 
-Carriage::Carriage(string t, int num) {
-    type = t;
-    number = num;
+Carriage::Carriage(const std::string &t, int num) : type(t), number(num) {
 }
 
-string Carriage::getType() {
+std::string Carriage::getType() const {
     return type;
 }
 
-int Carriage::getNumber() {
+int Carriage::getNumber() const {
     return number;
 }
 
-void Carriage::setType(string t) {
+void Carriage::setType(const std::string &t) {
     type = t;
 }
 
@@ -29,38 +25,45 @@ void Carriage::setNumber(int num) {
 }
 
 void Carriage::inputData() {
-    cout << "Введите номер вагона: ";
-    cin >> number;
-    cin >> ws;
-    cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
-    getline(cin, type);
+    int inputNum = 0;
+    std::string inputType;
+
+    std::cout << "Введите номер вагона: ";
+    while (!(std::cin >> inputNum)) {
+        std::cout << "Ошибка ввода! Введите числовой номер вагона: ";
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+    }
+    setNumber(inputNum);
+
+    std::cin.ignore(10000, '\n');
+
+    std::cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
+    std::getline(std::cin, inputType);
+    setType(inputType);
 }
 
-void Carriage::printInfo() {
-    cout << "  Вагон №" << number << " | Тип: " << type << "\n";
+void Carriage::printInfo() const {
+    std::cout << "  Вагон №" << number << " | Тип: " << type << "\n";
 }
 
 // Методы Train
 
-Train::Train() {
-    driver = "Не назначен";
-    maxWagons = 0;
+Train::Train() : driver("Не назначен"), maxWagons(0) {
 }
 
-Train::Train(string d, int maxW) {
-    driver = d;
-    maxWagons = maxW;
+Train::Train(const std::string &d, int maxW) : driver(d), maxWagons(maxW) {
 }
 
-string Train::getDriver() {
+std::string Train::getDriver() const {
     return driver;
 }
 
-void Train::setDriver(string d) {
+void Train::setDriver(const std::string &d) {
     driver = d;
 }
 
-int Train::getMaxWagons() {
+int Train::getMaxWagons() const {
     return maxWagons;
 }
 
@@ -68,45 +71,57 @@ void Train::setMaxWagons(int maxW) {
     maxWagons = maxW;
 }
 
-int Train::getCurrentWagonCount() {
-    return wagons.size();
+int Train::getCurrentWagonCount() const {
+    return static_cast<int>(wagons.size());
 }
 
 void Train::inputData() {
-    cout << "\n--- Настройка поезда ---\n";
-    cout << "Введите ФИО машиниста: ";
-    cin >> ws;
-    getline(cin, driver);
+    std::string inputDriver;
+    int inputMaxW = 0;
 
-    cout << "Введите максимальное количество вагонов: ";
-    cin >> maxWagons;
+    std::cout << "\n--- Настройка поезда ---\n";
+    std::cout << "Введите ФИО машиниста: ";
+
+    std::cin >> std::ws;
+    std::getline(std::cin, inputDriver);
+    setDriver(inputDriver);
+
+    std::cout << "Введите максимальное количество вагонов: ";
+    while (!(std::cin >> inputMaxW) || inputMaxW <= 0) {
+        std::cout << "Ошибка ввода! Введите число больше 0: ";
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+    }
+    setMaxWagons(inputMaxW);
+
+    std::cin.ignore(10000, '\n');
 }
 
-bool Train::addCarriage(Carriage carriage) {
+bool Train::addCarriage(const Carriage &carriage) {
     if (wagons.size() >= static_cast<size_t>(maxWagons)) {
-        cout << "\n[Ошибка] Нельзя добавить вагон №" << carriage.getNumber()
-             << "! Достигнут лимит поезда (" << maxWagons << " ваг.).\n";
+        std::cout << "\nНельзя добавить вагон №" << carriage.getNumber()
+                  << "! Достигнут лимит поезда (" << maxWagons << " ваг.).\n";
         return false;
     }
     wagons.push_back(carriage);
-    cout << "\n[Успех] Вагон №" << carriage.getNumber() << " (" << carriage.getType()
-         << ") добавлен в состав.\n";
+    std::cout << "\n[Успех] Вагон №" << carriage.getNumber() << " (" << carriage.getType()
+              << ") добавлен в состав.\n";
     return true;
 }
 
-void Train::printInfo() {
-    cout << "\n---------------------------------------\n";
-    cout << "Информация о поезде:\n";
-    cout << "Машинист: " << driver << "\n";
-    cout << "Загрузка: " << wagons.size() << " из " << maxWagons << " вагонов\n";
-    cout << "Состав поезда:\n";
+void Train::printInfo() const {
+    std::cout << "\n---------------------------------------\n";
+    std::cout << "Информация о поезде:\n";
+    std::cout << "Машинист: " << driver << "\n";
+    std::cout << "Загрузка: " << wagons.size() << " из " << maxWagons << " вагонов\n";
+    std::cout << "Состав поезда:\n";
 
     if (wagons.empty()) {
-        cout << "  (Вагоны отсутствуют)\n";
+        std::cout << "  (Вагоны отсутствуют)\n";
     } else {
-        for (size_t i = 0; i < wagons.size(); i++) {
-            wagons[i].printInfo();
+        for (const auto &carriage : wagons) {
+            carriage.printInfo();
         }
     }
-    cout << "---------------------------------------\n";
+    std::cout << "---------------------------------------\n";
 }

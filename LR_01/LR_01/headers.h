@@ -1,50 +1,48 @@
 #pragma once
 
+#include <Windows.h>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <windows.h>
-
-using namespace std;
 
 class Carriage {
   private:
-    string type;
+    std::string type;
     int number;
 
   public:
     Carriage();
-    Carriage(string t, int num);
+    Carriage(const std::string &t, int num);
 
-    string getType();
-    int getNumber();
+    std::string getType() const;
+    int getNumber() const;
 
-    void setType(string t);
+    void setType(const std::string &t);
     void setNumber(int num);
 
     void inputData();
-    void printInfo();
+    void printInfo() const;
 };
 
 class Train {
   private:
-    string driver;
+    std::string driver;
     int maxWagons;
-    vector<Carriage> wagons;
+    std::vector<Carriage> wagons;
 
   public:
     Train();
-    Train(string d, int maxW);
+    Train(const std::string &d, int maxW);
 
-    string getDriver();
-    void setDriver(string d);
+    std::string getDriver() const;
+    void setDriver(const std::string &d);
 
-    int getMaxWagons();
+    int getMaxWagons() const;
     void setMaxWagons(int maxW);
 
-    int getCurrentWagonCount();
+    int getCurrentWagonCount() const;
 
     void inputData();
-    bool addCarriage(Carriage carriage);
-    void printInfo();
+    bool addCarriage(const Carriage &carriage);
+    void printInfo() const;
 };
