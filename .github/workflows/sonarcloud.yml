@@ -15,6 +15,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Run Clang-Format Linter
+        shell: powershell
+        run: |
+          $files = Get-ChildItem -Path . -Include *.cpp, *.h, *.hpp -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' -and $_.FullName -notmatch '\\\.vs\\' }
+          if ($files) {
+            foreach ($file in $files) {
+              Write-Host "Checking format for: $($file.FullName)"
+              clang-format --dry-run --Werror $file.FullName
+            }
+          }
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -30,12 +41,10 @@ jobs:
           New-Item -Path .sonar -ItemType Directory -Force
           $headers = @{ "User-Agent" = "Mozilla/5.0" }
           
-          # Download Build Wrapper
           $wrapperUrl = "https://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip"
           Invoke-WebRequest -Uri $wrapperUrl -Headers $headers -OutFile .sonar\build-wrapper.zip
           Expand-Archive -Path .sonar\build-wrapper.zip -DestinationPath .sonar\build-wrapper -Force
           
-          # Download SonarScanner CLI
           $scannerUrl = "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip"
           Invoke-WebRequest -Uri $scannerUrl -Headers $headers -OutFile .sonar\sonar-scanner.zip
           Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
@@ -44,7 +53,6 @@ jobs:
         shell: powershell
         run: |
           $bwPath = Get-ChildItem -Path .sonar\build-wrapper -Filter "build-wrapper-win-x86-64.exe" -Recurse | Select-Object -ExpandProperty FullName
-          
           $targets = Get-ChildItem -Path . -Include *.vcxproj, *.sln, *.slnx -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' -and $_.FullName -notmatch '\\\.vs\\' }
           
           if ($targets.Count -eq 0) {
