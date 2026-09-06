@@ -59,7 +59,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          JAVA_HOME: ${{ env.JAVA_HOME_21_x64 }}
         shell: powershell
         run: |
+          $env:JAVA_HOME = $env:JAVA_HOME_21_x64
           $scannerPath = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner.bat" -Recurse | Select-Object -ExpandProperty FullName
           & $scannerPath
