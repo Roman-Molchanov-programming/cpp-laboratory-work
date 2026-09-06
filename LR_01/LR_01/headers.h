@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
+#include <string_view>
 #include <vector>
 
 class Carriage {
@@ -12,12 +13,12 @@ class Carriage {
 
   public:
     Carriage();
-    Carriage(const std::string &t, int num);
+    Carriage(std::string_view t, int num);
 
     std::string getType() const;
     int getNumber() const;
 
-    void setType(const std::string &t);
+    void setType(std::string_view t);
     void setNumber(int num);
 
     void inputData();
@@ -32,10 +33,10 @@ class Train {
 
   public:
     Train();
-    Train(const std::string &d, int maxW);
+    Train(std::string_view d, int maxW);
 
     std::string getDriver() const;
-    void setDriver(const std::string &d);
+    void setDriver(std::string_view d);
 
     int getMaxWagons() const;
     void setMaxWagons(int maxW);

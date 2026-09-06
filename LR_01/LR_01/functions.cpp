@@ -5,7 +5,7 @@
 Carriage::Carriage() : type("Неизвестно"), number(0) {
 }
 
-Carriage::Carriage(const std::string &t, int num) : type(t), number(num) {
+Carriage::Carriage(std::string_view t, int num) : type(t), number(num) {
 }
 
 std::string Carriage::getType() const {
@@ -16,7 +16,7 @@ int Carriage::getNumber() const {
     return number;
 }
 
-void Carriage::setType(const std::string &t) {
+void Carriage::setType(std::string_view t) {
     type = t;
 }
 
@@ -52,14 +52,14 @@ void Carriage::printInfo() const {
 Train::Train() : driver("Не назначен"), maxWagons(0) {
 }
 
-Train::Train(const std::string &d, int maxW) : driver(d), maxWagons(maxW) {
+Train::Train(std::string_view d, int maxW) : driver(d), maxWagons(maxW) {
 }
 
 std::string Train::getDriver() const {
     return driver;
 }
 
-void Train::setDriver(const std::string &d) {
+void Train::setDriver(std::string_view d) {
     driver = d;
 }
 
@@ -99,7 +99,7 @@ void Train::inputData() {
 
 bool Train::addCarriage(const Carriage &carriage) {
     if (wagons.size() >= static_cast<size_t>(maxWagons)) {
-        std::cout << "\nНельзя добавить вагон №" << carriage.getNumber()
+        std::cout << "\n[Ошибка] Нельзя добавить вагон №" << carriage.getNumber()
                   << "! Достигнут лимит поезда (" << maxWagons << " ваг.).\n";
         return false;
     }
