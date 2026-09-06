@@ -17,6 +17,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
@@ -32,22 +38,21 @@ jobs:
           Invoke-WebRequest -Uri $scannerUrl -OutFile .sonar\sonar-scanner.zip
           Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
 
-      - name: Build all solutions with Build Wrapper
+      - name: Build all projects with Build Wrapper
         shell: powershell
         run: |
           $bwPath = Get-ChildItem -Path .sonar\build-wrapper -Filter "build-wrapper-win-x86-64.exe" -Recurse | Select-Object -ExpandProperty FullName
           
-          # Находим все файлы .slnx и .sln во всех подпапках
-          $solutions = Get-ChildItem -Path . -Include *.slnx, *.sln -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' }
+          $targets = Get-ChildItem -Path . -Include *.vcxproj, *.sln, *.slnx -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' -and $_.FullName -notmatch '\\\.vs\\' }
           
-          if ($solutions.Count -eq 0) {
-            Write-Error "Файлы решений (.slnx / .sln) не найдены!"
+          if ($targets.Count -eq 0) {
+            Write-Error "No project or solution files found!"
             exit 1
           }
 
-          foreach ($sol in $solutions) {
-            Write-Host "Сборка решения: $($sol.FullName)"
-            & $bwPath --out-dir bw-output msbuild "$($sol.FullName)" /p:Configuration=Release /p:Platform="x64"
+          foreach ($target in $targets) {
+            Write-Host "=== Building: $($target.FullName) ==="
+            & $bwPath --out-dir bw-output msbuild "$($target.FullName)" /p:Configuration=Release /p:Platform="x64"
           }
 
       - name: Run SonarScanner
