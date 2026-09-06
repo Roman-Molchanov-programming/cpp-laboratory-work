@@ -65,8 +65,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          $env:JAVA_HOME = $env:JAVA_HOME_21_X64
-          $env:PATH = "$env:JAVA_HOME_21_X64\bin;$env:PATH"
-          
-          $scannerPath = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner.bat" -Recurse | Select-Object -ExpandProperty FullName
-          & $scannerPath
+          $scannerJar = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner-cli-*.jar" -Recurse | Select-Object -ExpandProperty FullName
+          & "$env:JAVA_HOME_21_X64\bin\java.exe" -jar $scannerJar
