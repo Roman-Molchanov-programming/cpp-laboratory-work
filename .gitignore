@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosct
+*.sln.docstates
+
+# Сборка и временные файлы
+Debug/
+Release/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.log
