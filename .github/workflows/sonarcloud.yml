@@ -49,21 +49,21 @@ jobs:
           Invoke-WebRequest -Uri $scannerUrl -Headers $headers -OutFile .sonar\sonar-scanner.zip
           Expand-Archive -Path .sonar\sonar-scanner.zip -DestinationPath .sonar\sonar-scanner -Force
 
-      - name: Build all projects with Build Wrapper
+      - name: Build project with Build Wrapper
         shell: powershell
         run: |
           $bwPath = Get-ChildItem -Path .sonar\build-wrapper -Filter "build-wrapper-win-x86-64.exe" -Recurse | Select-Object -ExpandProperty FullName
-          $targets = Get-ChildItem -Path . -Include *.vcxproj, *.sln, *.slnx -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' -and $_.FullName -notmatch '\\\.vs\\' }
           
-          if ($targets.Count -eq 0) {
-            Write-Error "No project or solution files found!"
+          # Ищем целевой файл проекта или решения внутри папки LR
+          $target = Get-ChildItem -Path . -Include *.slnx, *.vcxproj -Recurse | Where-Object { $_.FullName -notmatch '\\\.sonar\\' -and $_.FullName -notmatch '\\\.vs\\' } | Select-Object -First 1
+          
+          if (-not $target) {
+            Write-Error "No project or solution file found!"
             exit 1
           }
 
-          foreach ($target in $targets) {
-            Write-Host "=== Building: $($target.FullName) ==="
-            & $bwPath --out-dir bw-output msbuild "$($target.FullName)" /p:Configuration=Release /p:Platform="x64"
-          }
+          Write-Host "=== Building: $($target.FullName) ==="
+          & $bwPath --out-dir bw-output msbuild "$($target.FullName)" /t:Rebuild /p:Configuration=Release /p:Platform="x64"
 
       - name: Run SonarScanner
         env:
