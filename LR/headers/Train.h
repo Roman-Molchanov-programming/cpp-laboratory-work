@@ -21,6 +21,8 @@ class Train {
     void setMaxWagons(int maxW);
 
     int getCurrentWagonCount() const;
+    std::vector<Carriage> &getWagons();
+    const std::vector<Carriage> &getWagons() const;
 
     void inputData();
     bool addCarriage(const Carriage &carriage);

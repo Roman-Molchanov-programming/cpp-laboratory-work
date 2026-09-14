@@ -2,8 +2,6 @@
 
 using namespace std;
 
-// Методы Train
-
 Train::Train() : driver("Не назначен"), maxWagons(0) {
 }
 
@@ -28,6 +26,14 @@ void Train::setMaxWagons(int maxW) {
 
 int Train::getCurrentWagonCount() const {
     return static_cast<int>(wagons.size());
+}
+
+std::vector<Carriage> &Train::getWagons() {
+    return wagons;
+}
+
+const std::vector<Carriage> &Train::getWagons() const {
+    return wagons;
 }
 
 void Train::inputData() {
