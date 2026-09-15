@@ -40,7 +40,7 @@ void Train::inputData() {
     string inputDriver;
     int inputMaxW = 0;
 
-    cout << "\n--- Настройка поезда ---\n";
+    cout << endl << "--- Настройка поезда ---" << endl;
     cout << "Введите ФИО машиниста: ";
 
     cin >> ws;
@@ -60,29 +60,31 @@ void Train::inputData() {
 
 bool Train::addCarriage(const Carriage &carriage) {
     if (wagons.size() >= static_cast<size_t>(maxWagons)) {
-        cout << "\nНе удалось добавить вагон №" << carriage.getNumber()
-             << ": достигнут лимит поезда (" << maxWagons << " ваг.).\n";
+        cout << endl
+             << "Не удалось добавить вагон №" << carriage.getNumber()
+             << ": достигнут лимит поезда (" << maxWagons << " ваг.)" << endl;
         return false;
     }
     wagons.push_back(carriage);
-    cout << "\nВагон №" << carriage.getNumber() << " (" << carriage.getType()
-         << ") успешно добавлен в состав.\n";
+    cout << endl
+         << "Вагон №" << carriage.getNumber() << " (" << carriage.getType()
+         << ") успешно добавлен в состав." << endl;
     return true;
 }
 
 void Train::printInfo() const {
-    cout << "\n---------------------------------------\n";
-    cout << "Информация о поезде:\n";
-    cout << "Машинист: " << driver << "\n";
-    cout << "Загрузка: " << wagons.size() << " из " << maxWagons << " вагонов\n";
-    cout << "Состав поезда:\n";
+    cout << endl << "---------------------------------------" << endl;
+    cout << "Информация о поезде:" << endl;
+    cout << "Машинист: " << driver << endl;
+    cout << "Загрузка: " << wagons.size() << " из " << maxWagons << " вагонов" << endl;
+    cout << "Состав поезда:" << endl;
 
     if (wagons.empty()) {
-        cout << "  (Вагоны отсутствуют)\n";
+        cout << "  (Вагоны отсутствуют)" << endl;
     } else {
         for (const auto &carriage : wagons) {
             carriage.printInfo();
         }
     }
-    cout << "---------------------------------------\n";
+    cout << "---------------------------------------" << endl;
 }

@@ -46,5 +46,5 @@ void Carriage::inputData() {
 }
 
 void Carriage::printInfo() const {
-    cout << "  Вагон №" << number << " | Тип: " << type << "\n";
+    cout << "  Вагон №" << number << " | Тип: " << type << endl;
 }

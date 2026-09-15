@@ -8,46 +8,46 @@
 using namespace std;
 
 static void printMenu() {
-    cout << "\n========== МЕНЮ ==========\n";
-    cout << "1. Показать информацию о поездах\n";
-    cout << "2. Показать вагоны поезда\n";
-    cout << "3. Изменить данные поезда\n";
-    cout << "4. Изменить данные вагона\n";
-    cout << "5. Добавить вагон в поезд\n";
-    cout << "6. Добавить новый поезд\n";
-    cout << "0. Выход\n";
-    cout << "===========================\n";
+    cout << endl << "========== МЕНЮ ==========" << endl;
+    cout << "1. Показать информацию о поездах" << endl;
+    cout << "2. Показать вагоны поезда" << endl;
+    cout << "3. Изменить данные поезда" << endl;
+    cout << "4. Изменить данные вагона" << endl;
+    cout << "5. Добавить вагон в поезд" << endl;
+    cout << "6. Добавить новый поезд" << endl;
+    cout << "0. Выход" << endl;
+    cout << "===========================" << endl;
     cout << "Выберите пункт меню: ";
 }
 
 static void handlePrintAll(const vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
-        cout << "\nСписок поездов пуст.\n";
+        cout << endl << "Список поездов пуст." << endl;
         return;
     }
     for (size_t i = 0; i < trains.size(); ++i) {
-        cout << "\n--- Поезд №" << (i + 1) << " ---";
+        cout << endl << "--- Поезд №" << (i + 1) << " ---";
         trains[i]->printInfo();
     }
 }
 
 static void handlePrintWagons(const vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
-        cout << "\nСписок поездов пуст.\n";
+        cout << endl << "Список поездов пуст." << endl;
         return;
     }
-    cout << "\nВыберите номер поезда (от 1 до " << trains.size() << "): ";
+    cout << endl << "Выберите номер поезда (от 1 до " << trains.size() << "): ";
     size_t idx = 0;
     if (!(cin >> idx) || idx < 1 || idx > trains.size()) {
-        cout << "Некорректный номер поезда!\n";
+        cout << "Некорректный номер поезда!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
     }
     const auto &wagons = trains[idx - 1]->getWagons();
-    cout << "Вагоны поезда машиниста " << trains[idx - 1]->getDriver() << ":\n";
+    cout << "Вагоны поезда машиниста " << trains[idx - 1]->getDriver() << ":" << endl;
     if (wagons.empty()) {
-        cout << "  (Вагоны отсутствуют)\n";
+        cout << "  (Вагоны отсутствуют)" << endl;
     } else {
         for (const auto &c : wagons) {
             c.printInfo();
@@ -57,13 +57,13 @@ static void handlePrintWagons(const vector<shared_ptr<Train>> &trains) {
 
 static void handleEditTrain(vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
-        cout << "\nСписок поездов пуст.\n";
+        cout << endl << "Список поездов пуст." << endl;
         return;
     }
-    cout << "\nВыберите номер поезда для редактирования (от 1 до " << trains.size() << "): ";
+    cout << endl << "Выберите номер поезда для редактирования (от 1 до " << trains.size() << "): ";
     size_t idx = 0;
     if (!(cin >> idx) || idx < 1 || idx > trains.size()) {
-        cout << "Некорректный номер поезда!\n";
+        cout << "Некорректный номер поезда!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
@@ -84,18 +84,18 @@ static void handleEditTrain(vector<shared_ptr<Train>> &trains) {
         cin.ignore(10000, '\n');
     }
     trains[idx - 1]->setMaxWagons(newMax);
-    cout << "Данные поезда успешно обновлены!\n";
+    cout << "Данные поезда успешно обновлены!" << endl;
 }
 
 static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
-        cout << "\nСписок поездов пуст.\n";
+        cout << endl << "Список поездов пуст." << endl;
         return;
     }
-    cout << "\nВыберите номер поезда (от 1 до " << trains.size() << "): ";
+    cout << endl << "Выберите номер поезда (от 1 до " << trains.size() << "): ";
     size_t tIdx = 0;
     if (!(cin >> tIdx) || tIdx < 1 || tIdx > trains.size()) {
-        cout << "Некорректный номер поезда!\n";
+        cout << "Некорректный номер поезда!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
@@ -103,43 +103,43 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
 
     auto &wagons = trains[tIdx - 1]->getWagons();
     if (wagons.empty()) {
-        cout << "У выбранного поезда нет вагонов!\n";
+        cout << "У выбранного поезда нет вагонов!" << endl;
         return;
     }
 
-    cout << "Доступные вагоны:\n";
+    cout << "Доступные вагоны:" << endl;
     for (size_t i = 0; i < wagons.size(); ++i) {
-        cout << i + 1 << ". Вагон №" << wagons[i].getNumber() << " (" << wagons[i].getType()
-             << ")\n";
+        cout << i + 1 << ". Вагон №" << wagons[i].getNumber() << " (" << wagons[i].getType() << ")"
+             << endl;
     }
     cout << "Выберите номер вагона для изменения (от 1 до " << wagons.size() << "): ";
     size_t cIdx = 0;
     if (!(cin >> cIdx) || cIdx < 1 || cIdx > wagons.size()) {
-        cout << "Некорректный номер вагона!\n";
+        cout << "Некорректный номер вагона!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
     }
 
     wagons[cIdx - 1].inputData();
-    cout << "Данные вагона успешно обновлены!\n";
+    cout << "Данные вагона успешно обновлены!" << endl;
 }
 
 static void handleAddCarriage(vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
-        cout << "\nВ системе нет ни одного поезда! Сначала создайте поезд.\n";
+        cout << endl << "В системе нет ни одного поезда! Сначала создайте поезд." << endl;
         return;
     }
 
-    cout << "\nДоступные поезда (от 1 до " << trains.size() << "):\n";
+    cout << endl << "Доступные поезда (от 1 до " << trains.size() << "):" << endl;
     for (size_t i = 0; i < trains.size(); ++i) {
-        cout << i + 1 << ". Поезд машиниста " << trains[i]->getDriver() << "\n";
+        cout << i + 1 << ". Поезд машиниста " << trains[i]->getDriver() << endl;
     }
 
     size_t trainIndex = 0;
     cout << "Выберите номер поезда для добавления вагона: ";
     if (!(cin >> trainIndex) || trainIndex < 1 || trainIndex > trains.size()) {
-        cout << "\nНекорректный ввод!\n";
+        cout << endl << "Некорректный ввод!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
@@ -154,7 +154,7 @@ static void handleAddTrain(vector<shared_ptr<Train>> &trains) {
     auto newTrain = make_shared<Train>();
     newTrain->inputData();
     trains.push_back(newTrain);
-    cout << "Поезд добавлен! (Всего поездов: " << trains.size() << ")\n";
+    cout << "Поезд добавлен! (Всего поездов: " << trains.size() << ")" << endl;
 }
 
 int main() {
@@ -182,7 +182,7 @@ int main() {
     do {
         printMenu();
         if (!(cin >> choice)) {
-            cout << "\nОшибка! Введите целое число.\n";
+            cout << endl << "Ошибка! Введите целое число." << endl;
             cin.clear();
             cin.ignore(10000, '\n');
             continue;
@@ -208,10 +208,10 @@ int main() {
             handleAddTrain(trains);
             break;
         case 0:
-            cout << "\nЗавершение работы программы.\n";
+            cout << endl << "Завершение работы программы." << endl;
             break;
         default:
-            cout << "\nНеверный пункт меню, попробуйте снова!\n";
+            cout << endl << "Неверный пункт меню, попробуйте снова!" << endl;
             break;
         }
     } while (choice != 0);
