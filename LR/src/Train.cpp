@@ -2,10 +2,10 @@
 
 using namespace std;
 
-Train::Train() : driver("Не назначен"), maxWagons(0) {
+Train::Train() : driver("Не назначен"), maxCarriages(0) {
 }
 
-Train::Train(string_view d, int maxW) : driver(d), maxWagons(maxW) {
+Train::Train(string_view d, int maxC) : driver(d), maxCarriages(maxC) {
 }
 
 string Train::getDriver() const {
@@ -16,29 +16,29 @@ void Train::setDriver(string_view d) {
     driver = d;
 }
 
-int Train::getMaxWagons() const {
-    return maxWagons;
+int Train::getMaxCarriages() const {
+    return maxCarriages;
 }
 
-void Train::setMaxWagons(int maxW) {
-    maxWagons = maxW;
+void Train::setMaxCarriages(int maxC) {
+    maxCarriages = maxC;
 }
 
-int Train::getCurrentWagonCount() const {
-    return static_cast<int>(wagons.size());
+int Train::getCurrentCarriageCount() const {
+    return static_cast<int>(carriages.size());
 }
 
-std::vector<Carriage> &Train::getWagons() {
-    return wagons;
+std::vector<Carriage> &Train::getCarriages() {
+    return carriages;
 }
 
-const std::vector<Carriage> &Train::getWagons() const {
-    return wagons;
+const std::vector<Carriage> &Train::getCarriages() const {
+    return carriages;
 }
 
 void Train::inputData() {
     string inputDriver;
-    int inputMaxW = 0;
+    int inputMaxC = 0;
 
     cout << endl << "--- Настройка поезда ---" << endl;
     cout << "Введите ФИО машиниста: ";
@@ -48,27 +48,25 @@ void Train::inputData() {
     setDriver(inputDriver);
 
     cout << "Введите максимальное количество вагонов: ";
-    while (!(cin >> inputMaxW) || inputMaxW <= 0) {
+    while (!(cin >> inputMaxC) || inputMaxC <= 0) {
         cout << "Ошибка ввода! Введите число больше 0: ";
         cin.clear();
         cin.ignore(10000, '\n');
     }
-    setMaxWagons(inputMaxW);
+    setMaxCarriages(inputMaxC);
 
     cin.ignore(10000, '\n');
 }
 
 bool Train::addCarriage(const Carriage &carriage) {
-    if (wagons.size() >= static_cast<size_t>(maxWagons)) {
+    if (carriages.size() >= static_cast<size_t>(maxCarriages)) {
         cout << endl
-             << "Не удалось добавить вагон №" << carriage.getNumber()
-             << ": достигнут лимит поезда (" << maxWagons << " ваг.)" << endl;
+             << "Не удалось добавить вагон: достигнут лимит поезда (" << maxCarriages << " ваг.)"
+             << endl;
         return false;
     }
-    wagons.push_back(carriage);
-    cout << endl
-         << "Вагон №" << carriage.getNumber() << " (" << carriage.getType()
-         << ") успешно добавлен в состав." << endl;
+    carriages.push_back(carriage);
+    cout << endl << "Вагон успешно добавлен в состав." << endl;
     return true;
 }
 
@@ -76,13 +74,13 @@ void Train::printInfo() const {
     cout << endl << "---------------------------------------" << endl;
     cout << "Информация о поезде:" << endl;
     cout << "Машинист: " << driver << endl;
-    cout << "Загрузка: " << wagons.size() << " из " << maxWagons << " вагонов" << endl;
+    cout << "Загрузка: " << carriages.size() << " из " << maxCarriages << " вагонов" << endl;
     cout << "Состав поезда:" << endl;
 
-    if (wagons.empty()) {
+    if (carriages.empty()) {
         cout << "  (Вагоны отсутствуют)" << endl;
     } else {
-        for (const auto &carriage : wagons) {
+        for (const auto &carriage : carriages) {
             carriage.printInfo();
         }
     }
@@ -90,14 +88,14 @@ void Train::printInfo() const {
 }
 
 Train &Train::operator-=(int carriageNumber) {
-    for (auto it = wagons.begin(); it != wagons.end(); ++it) {
+    for (auto it = carriages.begin(); it != carriages.end(); ++it) {
         if (it->getNumber() == carriageNumber) {
-            wagons.erase(it);
-            cout << "Вагон №" << carriageNumber << " успешно удален из поезда!" << endl;
+            carriages.erase(it);
+            cout << "Вагон успешно удален из поезда!" << endl;
             return *this;
         }
     }
 
-    cout << "Вагон №" << carriageNumber << " не найден в составе поезда!" << endl;
+    cout << "Вагон с указанным номером не найден в составе поезда!" << endl;
     return *this;
 }

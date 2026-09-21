@@ -2,8 +2,6 @@
 
 using namespace std;
 
-// Методы Carriage
-
 Carriage::Carriage() : type("Неизвестно"), number(0) {
 }
 

@@ -7,11 +7,9 @@
 
 using namespace std;
 
-// Перегрузка operator-= для вектора поездов по индексу
 vector<shared_ptr<Train>> &operator-=(vector<shared_ptr<Train>> &trains, size_t index) {
     if (index < trains.size()) {
-        cout << "Поезд машиниста " << trains[index]->getDriver() << " успешно удален из системы!"
-             << endl;
+        cout << "Поезд успешно удален из системы!" << endl;
         trains.erase(trains.begin() + index);
     } else {
         cout << "Некорректный индекс поезда!" << endl;
@@ -45,7 +43,7 @@ static void handlePrintAll(const vector<shared_ptr<Train>> &trains) {
     }
 }
 
-static void handlePrintWagons(const vector<shared_ptr<Train>> &trains) {
+static void handlePrintCarriages(const vector<shared_ptr<Train>> &trains) {
     if (trains.empty()) {
         cout << endl << "Список поездов пуст." << endl;
         return;
@@ -58,12 +56,12 @@ static void handlePrintWagons(const vector<shared_ptr<Train>> &trains) {
         cin.ignore(10000, '\n');
         return;
     }
-    const auto &wagons = trains[idx - 1]->getWagons();
-    cout << "Вагоны поезда машиниста " << trains[idx - 1]->getDriver() << ":" << endl;
-    if (wagons.empty()) {
+    const auto &carriages = trains[idx - 1]->getCarriages();
+    cout << "Вагоны выбранного поезда:" << endl;
+    if (carriages.empty()) {
         cout << "  (Вагоны отсутствуют)" << endl;
     } else {
-        for (const auto &c : wagons) {
+        for (const auto &c : carriages) {
             c.printInfo();
         }
     }
@@ -91,13 +89,13 @@ static void handleEditTrain(vector<shared_ptr<Train>> &trains) {
 
     int newMax = 0;
     cout << "Введите новый лимит вагонов: ";
-    while (!(cin >> newMax) || newMax < trains[idx - 1]->getCurrentWagonCount()) {
+    while (!(cin >> newMax) || newMax < trains[idx - 1]->getCurrentCarriageCount()) {
         cout << "Ошибка! Лимит не может быть меньше текущего числа вагонов ("
-             << trains[idx - 1]->getCurrentWagonCount() << "): ";
+             << trains[idx - 1]->getCurrentCarriageCount() << "): ";
         cin.clear();
         cin.ignore(10000, '\n');
     }
-    trains[idx - 1]->setMaxWagons(newMax);
+    trains[idx - 1]->setMaxCarriages(newMax);
     cout << "Данные поезда успешно обновлены!" << endl;
 }
 
@@ -115,27 +113,27 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    auto &wagons = trains[tIdx - 1]->getWagons();
-    if (wagons.empty()) {
+    auto &carriages = trains[tIdx - 1]->getCarriages();
+    if (carriages.empty()) {
         cout << "У выбранного поезда нет вагонов!" << endl;
         return;
     }
 
     cout << "Доступные вагоны:" << endl;
-    for (size_t i = 0; i < wagons.size(); ++i) {
-        cout << i + 1 << ". Вагон №" << wagons[i].getNumber() << " (" << wagons[i].getType() << ")"
-             << endl;
+    for (size_t i = 0; i < carriages.size(); ++i) {
+        cout << i + 1 << ". Вагон №" << carriages[i].getNumber() << " (" << carriages[i].getType()
+             << ")" << endl;
     }
-    cout << "Выберите номер вагона для изменения (от 1 до " << wagons.size() << "): ";
+    cout << "Выберите номер вагона для изменения (от 1 до " << carriages.size() << "): ";
     size_t cIdx = 0;
-    if (!(cin >> cIdx) || cIdx < 1 || cIdx > wagons.size()) {
+    if (!(cin >> cIdx) || cIdx < 1 || cIdx > carriages.size()) {
         cout << "Некорректный номер вагона!" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
         return;
     }
 
-    wagons[cIdx - 1].inputData();
+    carriages[cIdx - 1].inputData();
     cout << "Данные вагона успешно обновлены!" << endl;
 }
 
@@ -186,8 +184,8 @@ static void handleDeleteCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    auto &train = trains[tIdx - 1];
-    if (train->getWagons().empty()) {
+    const auto &train = trains[tIdx - 1];
+    if (train->getCarriages().empty()) {
         cout << "В этом поезде нет вагонов для удаления!" << endl;
         return;
     }
@@ -258,7 +256,7 @@ int main() {
             handlePrintAll(trains);
             break;
         case 2:
-            handlePrintWagons(trains);
+            handlePrintCarriages(trains);
             break;
         case 3:
             handleEditTrain(trains);

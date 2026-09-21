@@ -7,22 +7,22 @@
 class Train {
   private:
     std::string driver;
-    int maxWagons;
-    std::vector<Carriage> wagons;
+    int maxCarriages;
+    std::vector<Carriage> carriages;
 
   public:
     Train();
-    Train(std::string_view d, int maxW);
+    Train(std::string_view d, int maxC);
 
     std::string getDriver() const;
     void setDriver(std::string_view d);
 
-    int getMaxWagons() const;
-    void setMaxWagons(int maxW);
+    int getMaxCarriages() const;
+    void setMaxCarriages(int maxC);
 
-    int getCurrentWagonCount() const;
-    std::vector<Carriage> &getWagons();
-    const std::vector<Carriage> &getWagons() const;
+    int getCurrentCarriageCount() const;
+    std::vector<Carriage> &getCarriages();
+    const std::vector<Carriage> &getCarriages() const;
 
     void inputData();
     bool addCarriage(const Carriage &carriage);
