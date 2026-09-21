@@ -7,6 +7,18 @@
 
 using namespace std;
 
+// Перегрузка operator-= для вектора поездов по индексу
+vector<shared_ptr<Train>> &operator-=(vector<shared_ptr<Train>> &trains, size_t index) {
+    if (index < trains.size()) {
+        cout << "Поезд машиниста " << trains[index]->getDriver() << " успешно удален из системы!"
+             << endl;
+        trains.erase(trains.begin() + index);
+    } else {
+        cout << "Некорректный индекс поезда!" << endl;
+    }
+    return trains;
+}
+
 static void printMenu() {
     cout << endl << "========== МЕНЮ ==========" << endl;
     cout << "1. Показать информацию о поездах" << endl;
@@ -15,6 +27,8 @@ static void printMenu() {
     cout << "4. Изменить данные вагона" << endl;
     cout << "5. Добавить вагон в поезд" << endl;
     cout << "6. Добавить новый поезд" << endl;
+    cout << "7. Удалить вагон из поезда" << endl;
+    cout << "8. Удалить поезд из системы" << endl;
     cout << "0. Выход" << endl;
     cout << "===========================" << endl;
     cout << "Выберите пункт меню: ";
@@ -157,6 +171,57 @@ static void handleAddTrain(vector<shared_ptr<Train>> &trains) {
     cout << "Поезд добавлен! (Всего поездов: " << trains.size() << ")" << endl;
 }
 
+static void handleDeleteCarriage(vector<shared_ptr<Train>> &trains) {
+    if (trains.empty()) {
+        cout << endl << "Список поездов пуст." << endl;
+        return;
+    }
+
+    cout << endl << "Выберите номер поезда (от 1 до " << trains.size() << "): ";
+    size_t tIdx = 0;
+    if (!(cin >> tIdx) || tIdx < 1 || tIdx > trains.size()) {
+        cout << "Некорректный номер поезда!" << endl;
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return;
+    }
+
+    auto &train = trains[tIdx - 1];
+    if (train->getWagons().empty()) {
+        cout << "В этом поезде нет вагонов для удаления!" << endl;
+        return;
+    }
+
+    cout << "Введите номер вагона для удаления: ";
+    int carNum = 0;
+    if (!(cin >> carNum)) {
+        cout << "Некорректный ввод!" << endl;
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return;
+    }
+
+    *train -= carNum;
+}
+
+static void handleDeleteTrain(vector<shared_ptr<Train>> &trains) {
+    if (trains.empty()) {
+        cout << endl << "Список поездов пуст." << endl;
+        return;
+    }
+
+    cout << endl << "Выберите номер поезда для удаления (от 1 до " << trains.size() << "): ";
+    size_t idx = 0;
+    if (!(cin >> idx) || idx < 1 || idx > trains.size()) {
+        cout << "Некорректный номер поезда!" << endl;
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return;
+    }
+
+    trains -= (idx - 1);
+}
+
 int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
@@ -206,6 +271,12 @@ int main() {
             break;
         case 6:
             handleAddTrain(trains);
+            break;
+        case 7:
+            handleDeleteCarriage(trains);
+            break;
+        case 8:
+            handleDeleteTrain(trains);
             break;
         case 0:
             cout << endl << "Завершение работы программы." << endl;

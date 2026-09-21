@@ -27,4 +27,6 @@ class Train {
     void inputData();
     bool addCarriage(const Carriage &carriage);
     void printInfo() const;
+
+    Train &operator-=(int carriageNumber);
 };

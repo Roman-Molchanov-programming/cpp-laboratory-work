@@ -88,3 +88,16 @@ void Train::printInfo() const {
     }
     cout << "---------------------------------------" << endl;
 }
+
+Train &Train::operator-=(int carriageNumber) {
+    for (auto it = wagons.begin(); it != wagons.end(); ++it) {
+        if (it->getNumber() == carriageNumber) {
+            wagons.erase(it);
+            cout << "Вагон №" << carriageNumber << " успешно удален из поезда!" << endl;
+            return *this;
+        }
+    }
+
+    cout << "Вагон №" << carriageNumber << " не найден в составе поезда!" << endl;
+    return *this;
+}
