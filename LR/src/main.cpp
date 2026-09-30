@@ -7,26 +7,17 @@
 
 using namespace std;
 
-vector<shared_ptr<Train>> &operator-=(vector<shared_ptr<Train>> &trains, size_t index) {
-    if (index < trains.size()) {
-        cout << "Поезд успешно удален из системы!" << endl;
-        trains.erase(trains.begin() + index);
-    } else {
-        cout << "Некорректный индекс поезда!" << endl;
-    }
-    return trains;
-}
-
 static void printMenu() {
     cout << endl << "========== МЕНЮ ==========" << endl;
     cout << "1. Показать информацию о поездах" << endl;
     cout << "2. Показать вагоны поезда" << endl;
     cout << "3. Изменить данные поезда" << endl;
     cout << "4. Изменить данные вагона" << endl;
-    cout << "5. Добавить вагон в поезд" << endl;
-    cout << "6. Добавить новый поезд" << endl;
-    cout << "7. Удалить вагон из поезда" << endl;
+    cout << "5. Добавить вагон в поезд (используя +=)" << endl;
+    cout << "6. Добавить новый поезд (используя >>)" << endl;
+    cout << "7. Удалить вагон из поезда (используя -=)" << endl;
     cout << "8. Удалить поезд из системы" << endl;
+    cout << "9. Сравнить поезда по загрузке и вместимости" << endl;
     cout << "0. Выход" << endl;
     cout << "===========================" << endl;
     cout << "Выберите пункт меню: ";
@@ -39,7 +30,7 @@ static void handlePrintAll(const vector<shared_ptr<Train>> &trains) {
     }
     for (size_t i = 0; i < trains.size(); ++i) {
         cout << endl << "--- Поезд №" << (i + 1) << " ---";
-        trains[i]->printInfo();
+        cout << *trains[i];
     }
 }
 
@@ -62,7 +53,7 @@ static void handlePrintCarriages(const vector<shared_ptr<Train>> &trains) {
         cout << "  (Вагоны отсутствуют)" << endl;
     } else {
         for (const auto &c : carriages) {
-            c.printInfo();
+            cout << c << endl;
         }
     }
 }
@@ -121,8 +112,7 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
 
     cout << "Доступные вагоны:" << endl;
     for (size_t i = 0; i < carriages.size(); ++i) {
-        cout << i + 1 << ". Вагон №" << carriages[i].getNumber() << " (" << carriages[i].getType()
-             << ")" << endl;
+        cout << i + 1 << ". " << carriages[i] << endl;
     }
     cout << "Выберите номер вагона для изменения (от 1 до " << carriages.size() << "): ";
     size_t cIdx = 0;
@@ -133,7 +123,7 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    carriages[cIdx - 1].inputData();
+    cin >> carriages[cIdx - 1];
     cout << "Данные вагона успешно обновлены!" << endl;
 }
 
@@ -158,13 +148,13 @@ static void handleAddCarriage(vector<shared_ptr<Train>> &trains) {
     }
 
     Carriage newCarriage;
-    newCarriage.inputData();
-    trains[trainIndex - 1]->addCarriage(newCarriage);
+    cin >> newCarriage;
+    *trains[trainIndex - 1] += newCarriage;
 }
 
 static void handleAddTrain(vector<shared_ptr<Train>> &trains) {
     auto newTrain = make_shared<Train>();
-    newTrain->inputData();
+    cin >> *newTrain;
     trains.push_back(newTrain);
     cout << "Поезд добавлен! (Всего поездов: " << trains.size() << ")" << endl;
 }
@@ -199,7 +189,8 @@ static void handleDeleteCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    *train -= carNum;
+    Carriage dummyCarriage("", carNum);
+    *train -= dummyCarriage;
 }
 
 static void handleDeleteTrain(vector<shared_ptr<Train>> &trains) {
@@ -217,7 +208,36 @@ static void handleDeleteTrain(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    trains -= (idx - 1);
+    trains.erase(trains.begin() + (idx - 1));
+    cout << "Поезд успешно удален из системы!" << endl;
+}
+
+static void handleCompareTrains(const vector<shared_ptr<Train>> &trains) {
+    if (trains.size() < 2) {
+        cout << "\nДля сравнения требуется как минимум 2 поезда в системе!" << endl;
+        return;
+    }
+
+    cout << "\n--- Сравнение поездов №1 и №2 ---" << endl;
+    if (*trains[0] == *trains[1]) {
+        cout << "У поездов одинаковый машинист!" << endl;
+    } else {
+        cout << "У поездов разные машинисты." << endl;
+    }
+
+    if (*trains[0] < *trains[1]) {
+        cout << "Поезд №1 содержит МЕНЬШЕ вагонов, чем Поезд №2." << endl;
+    } else if (*trains[0] > *trains[1]) {
+        cout << "Поезд №1 содержит БОЛЬШЕ вагонов, чем Поезд №2." << endl;
+    } else {
+        cout << "Поезда одинаковы по количеству вагонов." << endl;
+    }
+
+    if (compareTrainCapacity(*trains[0], *trains[1])) {
+        cout << "[Дружественная функция] Максимальная вместимость поездов совпадает!" << endl;
+    } else {
+        cout << "[Дружественная функция] Максимальная вместимость поездов различается." << endl;
+    }
 }
 
 int main() {
@@ -232,11 +252,11 @@ int main() {
     auto train1 = make_shared<Train>("Молчанов Р.А.", 3);
     auto train2 = make_shared<Train>("Скиба И.Г.", 2);
 
-    train1->addCarriage(carriage1);
-    train1->addCarriage(carriage2);
+    *train1 += carriage1;
+    *train1 += carriage2;
 
-    train2->addCarriage(carriage3);
-    train2->addCarriage(carriage4);
+    *train2 += carriage3;
+    *train2 += carriage4;
 
     vector<shared_ptr<Train>> trains = {train1, train2};
 
@@ -275,6 +295,9 @@ int main() {
             break;
         case 8:
             handleDeleteTrain(trains);
+            break;
+        case 9:
+            handleCompareTrains(trains);
             break;
         case 0:
             cout << endl << "Завершение работы программы." << endl;

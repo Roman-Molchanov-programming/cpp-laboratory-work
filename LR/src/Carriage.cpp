@@ -5,44 +5,81 @@ using namespace std;
 Carriage::Carriage() : type("Неизвестно"), number(0) {
 }
 
-Carriage::Carriage(string_view t, int num) : type(t), number(num) {
+Carriage::Carriage(string_view type, int number) {
+    this->type = type;
+    this->number = number;
 }
 
 string Carriage::getType() const {
-    return type;
+    return this->type;
 }
 
 int Carriage::getNumber() const {
-    return number;
+    return this->number;
 }
 
-void Carriage::setType(string_view t) {
-    type = t;
+void Carriage::setType(string_view type) {
+    this->type = type;
 }
 
-void Carriage::setNumber(int num) {
-    number = num;
+void Carriage::setNumber(int number) {
+    this->number = number;
 }
 
 void Carriage::inputData() {
-    int inputNum = 0;
-    string inputType;
-
-    cout << "Введите номер вагона: ";
-    while (!(cin >> inputNum)) {
-        cout << "Ошибка ввода! Введите числовой номер вагона: ";
-        cin.clear();
-        cin.ignore(10000, '\n');
-    }
-    setNumber(inputNum);
-
-    cin.ignore(10000, '\n');
-
-    cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
-    getline(cin, inputType);
-    setType(inputType);
+    cin >> *this;
 }
 
 void Carriage::printInfo() const {
-    cout << "  Вагон №" << number << " | Тип: " << type << endl;
+    cout << *this;
+}
+
+bool Carriage::operator==(const Carriage &other) const {
+    return this->number == other.number;
+}
+
+bool Carriage::operator!=(const Carriage &other) const {
+    return !(*this == other);
+}
+
+bool Carriage::operator<(const Carriage &other) const {
+    return this->number < other.number;
+}
+
+bool Carriage::operator>(const Carriage &other) const {
+    return other < *this;
+}
+
+bool Carriage::operator<=(const Carriage &other) const {
+    return !(*this > other);
+}
+
+bool Carriage::operator>=(const Carriage &other) const {
+    return !(*this < other);
+}
+
+std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
+    os << "  Вагон №" << carriage.number << " | Тип: " << carriage.type;
+    return os;
+}
+
+std::istream &operator>>(std::istream &is, Carriage &carriage) {
+    int inputNum = 0;
+    std::string inputType;
+
+    std::cout << "Введите номер вагона: ";
+    while (!(is >> inputNum)) {
+        std::cout << "Ошибка ввода! Введите числовой номер вагона: ";
+        is.clear();
+        is.ignore(10000, '\n');
+    }
+    carriage.setNumber(inputNum);
+
+    is.ignore(10000, '\n');
+
+    std::cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
+    std::getline(is, inputType);
+    carriage.setType(inputType);
+
+    return is;
 }

@@ -11,14 +11,26 @@ class Carriage {
 
   public:
     Carriage();
-    Carriage(std::string_view t, int num);
+    Carriage(std::string_view type, int number);
 
-    std::string getType() const;
-    int getNumber() const;
+    [[nodiscard]] std::string getType() const;
+    [[nodiscard]] int getNumber() const;
 
-    void setType(std::string_view t);
-    void setNumber(int num);
+    void setType(std::string_view type);
+    void setNumber(int number);
 
     void inputData();
     void printInfo() const;
+
+    // Перегрузка операторов сравнения
+    bool operator==(const Carriage &other) const;
+    bool operator!=(const Carriage &other) const;
+    bool operator<(const Carriage &other) const;
+    bool operator>(const Carriage &other) const;
+    bool operator<=(const Carriage &other) const;
+    bool operator>=(const Carriage &other) const;
+
+    // Дружественные операторы ввода/вывода
+    friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage);
+    friend std::istream &operator>>(std::istream &is, Carriage &carriage);
 };
