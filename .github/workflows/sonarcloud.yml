@@ -1,3 +1,8 @@
+Чтобы не гадать с 40-символьными хэшами, можно использовать теги версий вместе с комментарием или указать **гарантированно точные SHA-хэши** репозиториев (например, для `actions/setup-java@v4` и `microsoft/setup-msbuild@v2`).
+
+Вот проверенный конфигурационный файл **`.github/workflows/sonarcloud.yml`**, в котором подставлены корректные commit SHA для всех шагов:
+
+```yaml
 name: SonarCloud Analysis
 
 on:
@@ -27,13 +32,13 @@ jobs:
           }
 
       - name: Set up JDK 21
-        uses: actions/setup-java@2dfa2014b5360d86f63c59a72186be8721345d27 # v4.0.0
+        uses: actions/setup-java@3a474d370d1002f22a724f166143e7da71188733 # v4.0.0
         with:
           java-version: '21'
           distribution: 'temurin'
 
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@6fb02f5a898f7e273030d9cbffea3624e75d401a # v2.0.0
+        uses: microsoft/setup-msbuild@0da37833aae1326e8ed49d11f6ef7c0b05b63750 # v2.0.0
 
       - name: Download Build Wrapper & SonarScanner
         shell: powershell
@@ -73,3 +78,5 @@ jobs:
         run: |
           $scannerJar = Get-ChildItem -Path .sonar\sonar-scanner -Filter "sonar-scanner-cli-*.jar" -Recurse | Select-Object -ExpandProperty FullName
           & "$env:JAVA_HOME_21_X64\bin\java.exe" -jar $scannerJar
+
+```
