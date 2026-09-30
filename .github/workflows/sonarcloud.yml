@@ -27,13 +27,13 @@ jobs:
           }
 
       - name: Set up JDK 21
-        uses: actions/setup-java@3876ed7010ea9d47d3ba3d58e3234d08f4316d2e # v4.0.0
+        uses: actions/setup-java@2dfa2014b5360d86f63c59a72186be8721345d27 # v4.0.0
         with:
           java-version: '21'
           distribution: 'temurin'
 
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@6fb0222213a404a11f26487e411b22e1183141f1 # v2.0.0
+        uses: microsoft/setup-msbuild@6fb02f5a898f7e273030d9cbffea3624e75d401a # v2.0.0
 
       - name: Download Build Wrapper & SonarScanner
         shell: powershell
