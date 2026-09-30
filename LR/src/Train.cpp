@@ -22,7 +22,7 @@ int Train::getMaxCarriages() const {
 }
 
 void Train::setMaxCarriages(int newMaxCarriages) {
-    this->maxCarriages = newMaxMaxCarriages;
+    this->maxCarriages = newMaxCarriages;
 }
 
 int Train::getCurrentCarriageCount() const {
