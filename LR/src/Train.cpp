@@ -13,16 +13,16 @@ string Train::getDriver() const {
     return this->driver;
 }
 
-void Train::setDriver(string_view driver) {
-    this->driver = driver;
+void Train::setDriver(string_view newDriver) {
+    this->driver = newDriver;
 }
 
 int Train::getMaxCarriages() const {
     return this->maxCarriages;
 }
 
-void Train::setMaxCarriages(int maxCarriages) {
-    this->maxCarriages = maxCarriages;
+void Train::setMaxCarriages(int newMaxCarriages) {
+    this->maxCarriages = newMaxMaxCarriages;
 }
 
 int Train::getCurrentCarriageCount() const {

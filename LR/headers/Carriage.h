@@ -17,8 +17,8 @@ class Carriage {
     std::string getType() const;
     int getNumber() const;
 
-    void setType(std::string_view type);
-    void setNumber(int number);
+    void setType(std::string_view newType);
+    void setNumber(int newNumber);
 
     void inputData();
     void printInfo() const;

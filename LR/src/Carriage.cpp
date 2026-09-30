@@ -17,12 +17,12 @@ int Carriage::getNumber() const {
     return this->number;
 }
 
-void Carriage::setType(string_view type) {
-    this->type = type;
+void Carriage::setType(string_view newType) {
+    this->type = newType;
 }
 
-void Carriage::setNumber(int number) {
-    this->number = number;
+void Carriage::setNumber(int newNumber) {
+    this->number = newNumber;
 }
 
 void Carriage::inputData() {

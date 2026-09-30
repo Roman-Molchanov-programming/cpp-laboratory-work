@@ -17,10 +17,10 @@ class Train {
     Train(std::string_view driverName, int maxCapacity);
 
     std::string getDriver() const;
-    void setDriver(std::string_view driver);
+    void setDriver(std::string_view newDriver);
 
     int getMaxCarriages() const;
-    void setMaxCarriages(int maxCarriages);
+    void setMaxCarriages(int newMaxCarriages);
 
     int getCurrentCarriageCount() const;
     std::vector<Carriage> &getCarriages();
