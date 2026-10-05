@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <compare>
 #include <iostream>
+#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -10,12 +11,6 @@ class Carriage {
   private:
     std::string type;
     int number;
-
-    static std::string sanitizeForLog(std::string str) {
-        std::replace(str.begin(), str.end(), '\n', '_');
-        std::replace(str.begin(), str.end(), '\r', '_');
-        return str;
-    }
 
   public:
     Carriage();
@@ -33,7 +28,12 @@ class Carriage {
     auto operator<=>(const Carriage &other) const = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
-        os << "  Вагон №" << carriage.number << " | Тип: " << sanitizeForLog(carriage.type);
+        std::string safeType = carriage.type;
+        std::ranges::replace(safeType, '\n', '_');
+        std::ranges::replace(safeType, '\r', '_');
+
+        os << "  Вагон №" << carriage.number << " | Тип: ";
+        os.write(safeType.data(), static_cast<std::streamsize>(safeType.size()));
         return os;
     }
 

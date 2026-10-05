@@ -5,6 +5,7 @@
 #include <compare>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <vector>
 
 class Train {
@@ -12,12 +13,6 @@ class Train {
     std::string driver;
     int maxCarriages;
     std::vector<Carriage> carriages;
-
-    static std::string sanitizeForLog(std::string str) {
-        std::replace(str.begin(), str.end(), '\n', '_');
-        std::replace(str.begin(), str.end(), '\r', '_');
-        return str;
-    }
 
   public:
     Train();
@@ -44,10 +39,15 @@ class Train {
     Train &operator-=(const Carriage &carriage);
 
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
+        std::string safeDriver = train.driver;
+        std::ranges::replace(safeDriver, '\n', '_');
+        std::ranges::replace(safeDriver, '\r', '_');
+
         os << "\n---------------------------------------\n";
         os << "Информация о поезде:\n";
-        os << "Машинист: " << sanitizeForLog(train.driver) << "\n";
-        os << "Загрузка: " << train.carriages.size() << " из " << train.maxCarriages
+        os << "Машинист: ";
+        os.write(safeDriver.data(), static_cast<std::streamsize>(safeDriver.size()));
+        os << "\nЗагрузка: " << train.carriages.size() << " из " << train.maxCarriages
            << " вагонов\n";
         os << "Состав поезда:\n";
 
