@@ -57,7 +57,8 @@ void Train::printInfo() const {
 }
 
 bool Train::operator==(const Train &other) const {
-    return this->driver == other.driver;
+    return this->driver == other.driver && this->maxCarriages == other.maxCarriages &&
+           this->carriages == other.carriages;
 }
 
 std::strong_ordering Train::operator<=>(const Train &other) const {

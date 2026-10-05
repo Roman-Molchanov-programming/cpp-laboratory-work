@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Carriage.h"
-#include <algorithm>
 #include <compare>
 #include <iostream>
 #include <memory>
-#include <ranges>
 #include <vector>
 
 class Train {
@@ -41,15 +39,8 @@ class Train {
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
         os << "\n---------------------------------------\n";
         os << "Информация о поезде:\n";
-        os << "Машинист: ";
-        std::ranges::for_each(train.driver, [&os](char ch) {
-            if (ch == '\n' || ch == '\r') {
-                os.put('_');
-            } else {
-                os.put(ch);
-            }
-        });
-        os << "\nЗагрузка: " << train.carriages.size() << " из " << train.maxCarriages
+        os << "Машинист: " << train.driver << "\n";
+        os << "Загрузка: " << train.carriages.size() << " из " << train.maxCarriages
            << " вагонов\n";
         os << "Состав поезда:\n";
 
