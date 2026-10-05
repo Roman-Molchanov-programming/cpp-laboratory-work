@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>
 #include <compare>
 #include <iostream>
+#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -25,6 +27,36 @@ class Carriage {
 
     auto operator<=>(const Carriage &other) const = default;
 
-    friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage);
-    friend std::istream &operator>>(std::istream &is, Carriage &carriage);
+    friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
+        os << "  Вагон №" << carriage.number << " | Тип: ";
+        std::ranges::for_each(carriage.type, [&os](char ch) {
+            if (ch == '\n' || ch == '\r') {
+                os.put('_');
+            } else {
+                os.put(ch);
+            }
+        });
+        return os;
+    }
+
+    friend std::istream &operator>>(std::istream &is, Carriage &carriage) {
+        int inputNum = 0;
+        std::string inputType;
+
+        std::cout << "Введите номер вагона: ";
+        while (!(is >> inputNum)) {
+            std::cout << "Ошибка ввода! Введите числовой номер вагона: ";
+            is.clear();
+            is.ignore(10000, '\n');
+        }
+        carriage.setNumber(inputNum);
+
+        is.ignore(10000, '\n');
+
+        std::cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
+        std::getline(is, inputType);
+        carriage.setType(inputType);
+
+        return is;
+    }
 };

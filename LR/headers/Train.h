@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Carriage.h"
+#include <algorithm>
 #include <compare>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <vector>
 
 class Train {
@@ -36,8 +38,54 @@ class Train {
     Train &operator+=(const Carriage &carriage);
     Train &operator-=(const Carriage &carriage);
 
-    friend std::ostream &operator<<(std::ostream &os, const Train &train);
-    friend std::istream &operator>>(std::istream &is, Train &train);
+    friend std::ostream &operator<<(std::ostream &os, const Train &train) {
+        os << "\n---------------------------------------\n";
+        os << "Информация о поезде:\n";
+        os << "Машинист: ";
+        std::ranges::for_each(train.driver, [&os](char ch) {
+            if (ch == '\n' || ch == '\r') {
+                os.put('_');
+            } else {
+                os.put(ch);
+            }
+        });
+        os << "\nЗагрузка: " << train.carriages.size() << " из " << train.maxCarriages
+           << " вагонов\n";
+        os << "Состав поезда:\n";
+
+        if (train.carriages.empty()) {
+            os << "  (Вагоны отсутствуют)\n";
+        } else {
+            for (const auto &carriage : train.carriages) {
+                os << carriage << "\n";
+            }
+        }
+        os << "---------------------------------------\n";
+        return os;
+    }
+
+    friend std::istream &operator>>(std::istream &is, Train &train) {
+        std::string inputDriver;
+        int inputMaxC = 0;
+
+        std::cout << "\n--- Настройка поезда ---\n";
+        std::cout << "Введите ФИО машиниста: ";
+
+        is >> std::ws;
+        std::getline(is, inputDriver);
+        train.setDriver(inputDriver);
+
+        std::cout << "Введите максимальное количество вагонов: ";
+        while (!(is >> inputMaxC) || inputMaxC <= 0) {
+            std::cout << "Ошибка ввода! Введите число больше 0: ";
+            is.clear();
+            is.ignore(10000, '\n');
+        }
+        train.setMaxCarriages(inputMaxC);
+
+        is.ignore(10000, '\n');
+        return is;
+    }
 
     friend bool compareTrainCapacity(const Train &t1, const Train &t2);
 };
