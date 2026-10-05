@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Carriage.h"
-#include <algorithm>
 #include <compare>
 #include <iostream>
 #include <memory>
-#include <ranges>
 #include <vector>
 
 class Train {
@@ -39,27 +37,32 @@ class Train {
     Train &operator-=(const Carriage &carriage);
 
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
-        std::string safeDriver = train.driver;
-        std::ranges::replace(safeDriver, '\n', '_');
-        std::ranges::replace(safeDriver, '\r', '_');
+        train.printInfoToStream(os);
+        return os;
+    }
 
+    void printInfoToStream(std::ostream &os) const {
         os << "\n---------------------------------------\n";
         os << "Информация о поезде:\n";
         os << "Машинист: ";
-        os.write(safeDriver.data(), static_cast<std::streamsize>(safeDriver.size()));
-        os << "\nЗагрузка: " << train.carriages.size() << " из " << train.maxCarriages
-           << " вагонов\n";
+        for (char ch : driver) {
+            if (ch != '\n' && ch != '\r') {
+                os.put(ch);
+            } else {
+                os.put('_');
+            }
+        }
+        os << "\nЗагрузка: " << carriages.size() << " из " << maxCarriages << " вагонов\n";
         os << "Состав поезда:\n";
 
-        if (train.carriages.empty()) {
+        if (carriages.empty()) {
             os << "  (Вагоны отсутствуют)\n";
         } else {
-            for (const auto &carriage : train.carriages) {
+            for (const auto &carriage : carriages) {
                 os << carriage << "\n";
             }
         }
         os << "---------------------------------------\n";
-        return os;
     }
 
     friend std::istream &operator>>(std::istream &is, Train &train) {

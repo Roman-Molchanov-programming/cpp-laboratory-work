@@ -1,9 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <compare>
 #include <iostream>
-#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -28,13 +26,19 @@ class Carriage {
     auto operator<=>(const Carriage &other) const = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
-        std::string safeType = carriage.type;
-        std::ranges::replace(safeType, '\n', '_');
-        std::ranges::replace(safeType, '\r', '_');
-
-        os << "  Вагон №" << carriage.number << " | Тип: ";
-        os.write(safeType.data(), static_cast<std::streamsize>(safeType.size()));
+        carriage.printInfoToStream(os);
         return os;
+    }
+
+    void printInfoToStream(std::ostream &os) const {
+        os << "  Вагон №" << number << " | Тип: ";
+        for (char ch : type) {
+            if (ch != '\n' && ch != '\r') {
+                os.put(ch);
+            } else {
+                os.put('_');
+            }
+        }
     }
 
     friend std::istream &operator>>(std::istream &is, Carriage &carriage) {
