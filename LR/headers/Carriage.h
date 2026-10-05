@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <compare>
 #include <iostream>
 #include <string>
@@ -9,6 +10,12 @@ class Carriage {
   private:
     std::string type;
     int number;
+
+    static std::string sanitizeForLog(std::string str) {
+        std::replace(str.begin(), str.end(), '\n', '_');
+        std::replace(str.begin(), str.end(), '\r', '_');
+        return str;
+    }
 
   public:
     Carriage();
@@ -26,7 +33,7 @@ class Carriage {
     auto operator<=>(const Carriage &other) const = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
-        os << "  Вагон №" << carriage.number << " | Тип: " << carriage.type;
+        os << "  Вагон №" << carriage.number << " | Тип: " << sanitizeForLog(carriage.type);
         return os;
     }
 

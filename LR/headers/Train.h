@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Carriage.h"
+#include <algorithm>
 #include <compare>
 #include <iostream>
 #include <memory>
@@ -11,6 +12,12 @@ class Train {
     std::string driver;
     int maxCarriages;
     std::vector<Carriage> carriages;
+
+    static std::string sanitizeForLog(std::string str) {
+        std::replace(str.begin(), str.end(), '\n', '_');
+        std::replace(str.begin(), str.end(), '\r', '_');
+        return str;
+    }
 
   public:
     Train();
@@ -39,7 +46,7 @@ class Train {
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
         os << "\n---------------------------------------\n";
         os << "Информация о поезде:\n";
-        os << "Машинист: " << train.driver << "\n";
+        os << "Машинист: " << sanitizeForLog(train.driver) << "\n";
         os << "Загрузка: " << train.carriages.size() << " из " << train.maxCarriages
            << " вагонов\n";
         os << "Состав поезда:\n";
