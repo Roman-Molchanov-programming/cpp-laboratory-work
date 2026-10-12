@@ -12,7 +12,6 @@ Train::Train(string_view driverName, int maxCapacity)
 string Train::getDriver() const {
     return this->driver;
 }
-
 void Train::setDriver(string_view newDriver) {
     this->driver = newDriver;
 }
@@ -20,7 +19,6 @@ void Train::setDriver(string_view newDriver) {
 int Train::getMaxCarriages() const {
     return this->maxCarriages;
 }
-
 void Train::setMaxCarriages(int newMaxCarriages) {
     this->maxCarriages = newMaxCarriages;
 }
@@ -29,11 +27,11 @@ int Train::getCurrentCarriageCount() const {
     return static_cast<int>(this->carriages.size());
 }
 
-std::vector<Carriage> &Train::getCarriages() {
+vector<shared_ptr<Carriage>> &Train::getCarriages() {
     return this->carriages;
 }
 
-const std::vector<Carriage> &Train::getCarriages() const {
+const vector<shared_ptr<Carriage>> &Train::getCarriages() const {
     return this->carriages;
 }
 
@@ -41,7 +39,7 @@ void Train::inputData() {
     cin >> *this;
 }
 
-bool Train::addCarriage(const Carriage &carriage) {
+bool Train::addCarriage(const shared_ptr<Carriage> &carriage) {
     if (this->carriages.size() >= static_cast<size_t>(this->maxCarriages)) {
         cout << "\nНе удалось добавить вагон: достигнут лимит поезда (" << this->maxCarriages
              << " ваг.)\n";
@@ -57,22 +55,30 @@ void Train::printInfo() const {
 }
 
 bool Train::operator==(const Train &other) const {
-    return this->driver == other.driver && this->maxCarriages == other.maxCarriages &&
-           this->carriages == other.carriages;
+    if (this->driver != other.driver || this->maxCarriages != other.maxCarriages ||
+        this->carriages.size() != other.carriages.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < this->carriages.size(); ++i) {
+        if (*this->carriages[i] != *other.carriages[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::strong_ordering Train::operator<=>(const Train &other) const {
     return this->carriages.size() <=> other.carriages.size();
 }
 
-Train &Train::operator+=(const Carriage &carriage) {
+Train &Train::operator+=(const shared_ptr<Carriage> &carriage) {
     this->addCarriage(carriage);
     return *this;
 }
 
 Train &Train::operator-=(const Carriage &carriage) {
     for (auto it = this->carriages.begin(); it != this->carriages.end(); ++it) {
-        if (*it == carriage) {
+        if ((*it)->getNumber() == carriage.getNumber()) {
             this->carriages.erase(it);
             cout << "Вагон успешно удален из поезда!\n";
             return *this;

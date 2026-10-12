@@ -10,7 +10,7 @@ class Train {
   private:
     std::string driver;
     int maxCarriages;
-    std::vector<Carriage> carriages;
+    std::vector<std::shared_ptr<Carriage>> carriages;
 
   public:
     Train();
@@ -23,17 +23,17 @@ class Train {
     void setMaxCarriages(int newMaxCarriages);
 
     int getCurrentCarriageCount() const;
-    std::vector<Carriage> &getCarriages();
-    const std::vector<Carriage> &getCarriages() const;
+    std::vector<std::shared_ptr<Carriage>> &getCarriages();
+    const std::vector<std::shared_ptr<Carriage>> &getCarriages() const;
 
     void inputData();
-    bool addCarriage(const Carriage &carriage);
+    bool addCarriage(const std::shared_ptr<Carriage> &carriage);
     void printInfo() const;
 
     bool operator==(const Train &other) const;
     std::strong_ordering operator<=>(const Train &other) const;
 
-    Train &operator+=(const Carriage &carriage);
+    Train &operator+=(const std::shared_ptr<Carriage> &carriage);
     Train &operator-=(const Carriage &carriage);
 
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
@@ -48,7 +48,7 @@ class Train {
             os << "  (Вагоны отсутствуют)\n";
         } else {
             for (const auto &carriage : train.carriages) {
-                os << carriage << "\n";
+                os << *carriage << "\n";
             }
         }
         os << "---------------------------------------\n";

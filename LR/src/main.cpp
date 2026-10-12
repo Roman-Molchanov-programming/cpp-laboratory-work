@@ -1,3 +1,6 @@
+#include "../headers/CompartmentCarriage.h"
+#include "../headers/PlatskartCarriage.h"
+#include "../headers/SeatingCarriage.h"
 #include "../headers/Train.h"
 #include <Windows.h>
 #include <iostream>
@@ -53,7 +56,7 @@ static void handlePrintCarriages(const vector<shared_ptr<Train>> &trains) {
         cout << "  (Вагоны отсутствуют)" << endl;
     } else {
         for (const auto &c : carriages) {
-            cout << c << endl;
+            cout << *c << endl;
         }
     }
 }
@@ -112,7 +115,7 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
 
     cout << "Доступные вагоны:" << endl;
     for (size_t i = 0; i < carriages.size(); ++i) {
-        cout << i + 1 << ". " << carriages[i] << endl;
+        cout << i + 1 << ". " << *carriages[i] << endl;
     }
     cout << "Выберите номер вагона для изменения (от 1 до " << carriages.size() << "): ";
     size_t cIdx = 0;
@@ -123,7 +126,7 @@ static void handleEditCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    cin >> carriages[cIdx - 1];
+    cin >> *carriages[cIdx - 1];
     cout << "Данные вагона успешно обновлены!" << endl;
 }
 
@@ -133,7 +136,7 @@ static void handleAddCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    cout << endl << "Доступные поезда (от 1 до " << trains.size() << "):" << endl;
+    cout << endl << "Доступные поезда:" << endl;
     for (size_t i = 0; i < trains.size(); ++i) {
         cout << i + 1 << ". Поезд машиниста " << trains[i]->getDriver() << endl;
     }
@@ -147,8 +150,34 @@ static void handleAddCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    Carriage newCarriage;
-    cin >> newCarriage;
+    cout << "\nВыберите тип вагона:\n"
+         << "1. Сидячий\n"
+         << "2. Плацкарт\n"
+         << "3. Купе\n"
+         << "Ваш выбор: ";
+
+    int choice = 0;
+    if (!(cin >> choice)) {
+        choice = 1;
+        cin.clear();
+        cin.ignore(10000, '\n');
+    }
+
+    shared_ptr<Carriage> newCarriage;
+    if (choice == 2) {
+        auto c = make_shared<PlatskartCarriage>();
+        cin >> *c;
+        newCarriage = c;
+    } else if (choice == 3) {
+        auto c = make_shared<CompartmentCarriage>();
+        cin >> *c;
+        newCarriage = c;
+    } else {
+        auto c = make_shared<SeatingCarriage>();
+        cin >> *c;
+        newCarriage = c;
+    }
+
     *trains[trainIndex - 1] += newCarriage;
 }
 
@@ -189,7 +218,7 @@ static void handleDeleteCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    Carriage dummyCarriage("", carNum);
+    SeatingCarriage dummyCarriage(carNum, 0);
     *train -= dummyCarriage;
 }
 
@@ -220,9 +249,9 @@ static void handleCompareTrains(const vector<shared_ptr<Train>> &trains) {
 
     cout << "\n--- Сравнение поездов №1 и №2 ---" << endl;
     if (*trains[0] == *trains[1]) {
-        cout << "У поездов одинаковый машинист!" << endl;
+        cout << "Поезда полностью идентичны (машинист, лимит и состав вагонов)!" << endl;
     } else {
-        cout << "У поездов разные машинисты." << endl;
+        cout << "Поезда различаются." << endl;
     }
 
     if (*trains[0] < *trains[1]) {
@@ -244,10 +273,9 @@ int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    auto carriage1 = Carriage("Купе", 101);
-    auto carriage2 = Carriage("Плацкарт", 102);
-    auto carriage3 = Carriage("Плацкарт", 201);
-    auto carriage4 = Carriage("Сидячий", 202);
+    auto carriage1 = make_shared<CompartmentCarriage>(101, 9);
+    auto carriage2 = make_shared<PlatskartCarriage>(102, 18);
+    auto carriage3 = make_shared<SeatingCarriage>(201, 25);
 
     auto train1 = make_shared<Train>("Молчанов Р.А.", 3);
     auto train2 = make_shared<Train>("Скиба И.Г.", 2);
@@ -256,7 +284,6 @@ int main() {
     *train1 += carriage2;
 
     *train2 += carriage3;
-    *train2 += carriage4;
 
     vector<shared_ptr<Train>> trains = {train1, train2};
 

@@ -6,13 +6,14 @@
 #include <string_view>
 
 class Carriage {
-  private:
+  protected:
     std::string type;
     int number;
 
   public:
     Carriage();
     Carriage(std::string_view carriageType, int carriageNumber);
+    virtual ~Carriage() = default;
 
     std::string getType() const;
     int getNumber() const;
@@ -20,34 +21,28 @@ class Carriage {
     void setType(std::string_view newType);
     void setNumber(int newNumber);
 
-    void inputData();
-    void printInfo() const;
+    virtual void inputData();
+    virtual void printInfo() const;
 
-    auto operator<=>(const Carriage &other) const = default;
+    virtual bool operator==(const Carriage &other) const {
+        return this->type == other.type && this->number == other.number;
+    }
+
+    auto operator<=>(const Carriage &other) const {
+        return number <=> other.number;
+    }
 
     friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
-        os << "  Вагон №" << carriage.number << " | Тип: " << carriage.type;
+        carriage.printVirtualInfo(os);
         return os;
     }
 
+    virtual void printVirtualInfo(std::ostream &os) const;
+
     friend std::istream &operator>>(std::istream &is, Carriage &carriage) {
-        int inputNum = 0;
-        std::string inputType;
-
-        std::cout << "Введите номер вагона: ";
-        while (!(is >> inputNum)) {
-            std::cout << "Ошибка ввода! Введите числовой номер вагона: ";
-            is.clear();
-            is.ignore(10000, '\n');
-        }
-        carriage.setNumber(inputNum);
-
-        is.ignore(10000, '\n');
-
-        std::cout << "Введите тип вагона (Плацкарт, Купе, Сидячий): ";
-        std::getline(is, inputType);
-        carriage.setType(inputType);
-
+        carriage.inputVirtualData(is);
         return is;
     }
+
+    virtual void inputVirtualData(std::istream &is);
 };
