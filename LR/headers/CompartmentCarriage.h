@@ -13,8 +13,9 @@ class CompartmentCarriage : public Carriage {
     int getCompartmentsCount() const;
     void setCompartmentsCount(int compartments);
 
-    bool operator==(const Carriage &other) const override;
-
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;
+
+  protected:
+    bool isEqual(const Carriage &other) const override;
 };

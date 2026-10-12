@@ -16,15 +16,16 @@ void CompartmentCarriage::setCompartmentsCount(int compartments) {
     compartmentsCount = compartments;
 }
 
-bool CompartmentCarriage::operator==(const Carriage &other) const {
-    if (!Carriage::operator==(other))
+bool CompartmentCarriage::isEqual(const Carriage &other) const {
+    if (this->getType() != other.getType() || this->getNumber() != other.getNumber()) {
         return false;
+    }
     const auto *c = dynamic_cast<const CompartmentCarriage *>(&other);
     return c != nullptr && this->compartmentsCount == c->compartmentsCount;
 }
 
 void CompartmentCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон Купе №" << number << " | Купешек в вагоне: " << compartmentsCount;
+    os << "  Вагон Купе №" << getNumber() << " | Купешек в вагоне: " << compartmentsCount;
 }
 
 void CompartmentCarriage::inputVirtualData(istream &is) {

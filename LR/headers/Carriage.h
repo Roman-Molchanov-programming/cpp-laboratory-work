@@ -6,7 +6,7 @@
 #include <string_view>
 
 class Carriage {
-  protected:
+  private:
     std::string type;
     int number;
 
@@ -24,13 +24,11 @@ class Carriage {
     virtual void inputData();
     virtual void printInfo() const;
 
-    virtual bool operator==(const Carriage &other) const {
-        return this->type == other.type && this->number == other.number;
+    bool operator==(const Carriage &other) const {
+        return this->isEqual(other);
     }
 
-    auto operator<=>(const Carriage &other) const {
-        return number <=> other.number;
-    }
+    auto operator<=>(const Carriage &other) const = default;
 
     friend std::ostream &operator<<(std::ostream &os, const Carriage &carriage) {
         carriage.printVirtualInfo(os);
@@ -45,4 +43,9 @@ class Carriage {
     }
 
     virtual void inputVirtualData(std::istream &is);
+
+  protected:
+    virtual bool isEqual(const Carriage &other) const {
+        return this->type == other.type && this->number == other.number;
+    }
 };

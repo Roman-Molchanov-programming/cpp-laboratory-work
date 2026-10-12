@@ -16,15 +16,16 @@ void PlatskartCarriage::setSideSeatsCount(int sideSeats) {
     sideSeatsCount = sideSeats;
 }
 
-bool PlatskartCarriage::operator==(const Carriage &other) const {
-    if (!Carriage::operator==(other))
+bool PlatskartCarriage::isEqual(const Carriage &other) const {
+    if (this->getType() != other.getType() || this->getNumber() != other.getNumber()) {
         return false;
+    }
     const auto *p = dynamic_cast<const PlatskartCarriage *>(&other);
     return p != nullptr && this->sideSeatsCount == p->sideSeatsCount;
 }
 
 void PlatskartCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон Плацкарт №" << number << " | Боковых мест: " << sideSeatsCount;
+    os << "  Вагон Плацкарт №" << getNumber() << " | Боковых мест: " << sideSeatsCount;
 }
 
 void PlatskartCarriage::inputVirtualData(istream &is) {

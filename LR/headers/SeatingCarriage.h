@@ -13,8 +13,9 @@ class SeatingCarriage : public Carriage {
     int getRowsCount() const;
     void setRowsCount(int rows);
 
-    bool operator==(const Carriage &other) const override;
-
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;
+
+  protected:
+    bool isEqual(const Carriage &other) const override;
 };

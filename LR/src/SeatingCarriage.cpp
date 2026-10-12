@@ -16,15 +16,16 @@ void SeatingCarriage::setRowsCount(int rows) {
     rowsCount = rows;
 }
 
-bool SeatingCarriage::operator==(const Carriage &other) const {
-    if (!Carriage::operator==(other))
+bool SeatingCarriage::isEqual(const Carriage &other) const {
+    if (this->getType() != other.getType() || this->getNumber() != other.getNumber()) {
         return false;
+    }
     const auto *s = dynamic_cast<const SeatingCarriage *>(&other);
     return s != nullptr && this->rowsCount == s->rowsCount;
 }
 
 void SeatingCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Сидячий вагон №" << number << " | Рядов кресел: " << rowsCount;
+    os << "  Сидячий вагон №" << getNumber() << " | Рядов кресел: " << rowsCount;
 }
 
 void SeatingCarriage::inputVirtualData(istream &is) {
