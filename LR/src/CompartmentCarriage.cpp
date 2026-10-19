@@ -2,18 +2,19 @@
 
 using namespace std;
 
-CompartmentCarriage::CompartmentCarriage() : Carriage("Купе", 0), compartmentsCount(9) {
+CompartmentCarriage::CompartmentCarriage() : Carriage("Купе", 0), seats(18, 18) {
 }
 
-CompartmentCarriage::CompartmentCarriage(int carriageNumber, int compartments)
-    : Carriage("Купе", carriageNumber), compartmentsCount(compartments) {
+CompartmentCarriage::CompartmentCarriage(int carriageNumber, int lower, int upper)
+    : Carriage("Купе", carriageNumber), seats(lower, upper) {
 }
 
-int CompartmentCarriage::getCompartmentsCount() const {
-    return compartmentsCount;
+const SeatConfig &CompartmentCarriage::getSeats() const {
+    return seats;
 }
-void CompartmentCarriage::setCompartmentsCount(int compartments) {
-    compartmentsCount = compartments;
+
+void CompartmentCarriage::setSeats(const SeatConfig &newSeats) {
+    seats = newSeats;
 }
 
 bool CompartmentCarriage::isEqual(const Carriage &other) const {
@@ -21,20 +22,15 @@ bool CompartmentCarriage::isEqual(const Carriage &other) const {
         return false;
     }
     const auto *c = dynamic_cast<const CompartmentCarriage *>(&other);
-    return c != nullptr && this->compartmentsCount == c->compartmentsCount;
+    return c != nullptr && this->seats == c->seats;
 }
 
 void CompartmentCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон Купе №" << getNumber() << " | Купешек в вагоне: " << compartmentsCount;
+    os << "  Вагон Купе №" << getNumber() << " | Места: [" << seats << "]";
 }
 
 void CompartmentCarriage::inputVirtualData(istream &is) {
     Carriage::inputVirtualData(is);
-    cout << "Введите количество купе: ";
-    while (!(is >> compartmentsCount) || compartmentsCount <= 0) {
-        cout << "Ошибка! Введите положительное число купе: ";
-        is.clear();
-        is.ignore(10000, '\n');
-    }
-    is.ignore(10000, '\n');
+    cout << "Настройка мест в купе:\n";
+    is >> seats;
 }

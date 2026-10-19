@@ -1,17 +1,18 @@
 #pragma once
 
 #include "Carriage.h"
+#include "SeatConfig.h"
 
 class CompartmentCarriage : public Carriage {
   private:
-    int compartmentsCount;
+    SeatConfig seats; // Конфигурация мест (нижние/верхние)
 
   public:
     CompartmentCarriage();
-    CompartmentCarriage(int carriageNumber, int compartments);
+    CompartmentCarriage(int carriageNumber, int lower = 18, int upper = 18);
 
-    int getCompartmentsCount() const;
-    void setCompartmentsCount(int compartments);
+    const SeatConfig &getSeats() const;
+    void setSeats(const SeatConfig &newSeats);
 
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;

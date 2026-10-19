@@ -2,18 +2,20 @@
 
 using namespace std;
 
-PlatskartCarriage::PlatskartCarriage() : Carriage("Плацкарт", 0), sideSeatsCount(18) {
+PlatskartCarriage::PlatskartCarriage() : Carriage("Плацкарт", 0), platskartSeats(18, 18, 9, 9) {
 }
 
-PlatskartCarriage::PlatskartCarriage(int carriageNumber, int sideSeats)
-    : Carriage("Плацкарт", carriageNumber), sideSeatsCount(sideSeats) {
+PlatskartCarriage::PlatskartCarriage(int carriageNumber, int mLower, int mUpper, int sLower,
+                                     int sUpper)
+    : Carriage("Плацкарт", carriageNumber), platskartSeats(mLower, mUpper, sLower, sUpper) {
 }
 
-int PlatskartCarriage::getSideSeatsCount() const {
-    return sideSeatsCount;
+const PlatskartSeatConfig &PlatskartCarriage::getPlatskartSeats() const {
+    return platskartSeats;
 }
-void PlatskartCarriage::setSideSeatsCount(int sideSeats) {
-    sideSeatsCount = sideSeats;
+
+void PlatskartCarriage::setPlatskartSeats(const PlatskartSeatConfig &seats) {
+    platskartSeats = seats;
 }
 
 bool PlatskartCarriage::isEqual(const Carriage &other) const {
@@ -21,20 +23,15 @@ bool PlatskartCarriage::isEqual(const Carriage &other) const {
         return false;
     }
     const auto *p = dynamic_cast<const PlatskartCarriage *>(&other);
-    return p != nullptr && this->sideSeatsCount == p->sideSeatsCount;
+    return p != nullptr && this->platskartSeats == p->platskartSeats;
 }
 
 void PlatskartCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон Плацкарт №" << getNumber() << " | Боковых мест: " << sideSeatsCount;
+    os << "  Вагон Плацкарт №" << getNumber() << " | Места: [" << platskartSeats << "]";
 }
 
 void PlatskartCarriage::inputVirtualData(istream &is) {
     Carriage::inputVirtualData(is);
-    cout << "Введите количество боковых мест: ";
-    while (!(is >> sideSeatsCount) || sideSeatsCount < 0) {
-        cout << "Ошибка! Введите корректное число мест: ";
-        is.clear();
-        is.ignore(10000, '\n');
-    }
-    is.ignore(10000, '\n');
+    cout << "Настройка мест в плацкарте:\n";
+    is >> platskartSeats;
 }

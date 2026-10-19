@@ -23,6 +23,7 @@
     <ClCompile Include="src\CompartmentCarriage.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlatskartCarriage.cpp" />
+    <ClCompile Include="src\SeatConfig.cpp" />
     <ClCompile Include="src\SeatingCarriage.cpp" />
     <ClCompile Include="src\Train.cpp" />
   </ItemGroup>
