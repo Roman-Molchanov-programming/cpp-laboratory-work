@@ -36,8 +36,8 @@ void Carriage::printVirtualInfo(std::ostream &os) const {
 void Carriage::inputVirtualData(std::istream &is) {
     int inputNum = 0;
     cout << "Введите номер вагона: ";
-    while (!(is >> inputNum)) {
-        cout << "Ошибка ввода! Введите числовой номер вагона: ";
+    while (!(is >> inputNum) || inputNum < 0) {
+        cout << "Ошибка! Введите числовой номер вагона: ";
         is.clear();
         is.ignore(10000, '\n');
     }

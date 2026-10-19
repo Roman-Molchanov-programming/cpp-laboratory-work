@@ -23,6 +23,7 @@ class Carriage {
 
     virtual void inputData();
     virtual void printInfo() const;
+    virtual int getTotalSeats() const = 0;
 
     bool operator==(const Carriage &other) const {
         return this->isEqual(other);

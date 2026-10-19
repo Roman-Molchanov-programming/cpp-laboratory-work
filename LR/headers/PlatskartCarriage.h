@@ -1,19 +1,23 @@
 #pragma once
 
-#include "Carriage.h"
-#include "SeatConfig.h"
+#include "PassengerCarriage.h"
 
-class PlatskartCarriage : public Carriage {
+class PlatskartCarriage : public PassengerCarriage {
   private:
-    PlatskartSeatConfig platskartSeats;     // Конфигурация мест (нижние/верхние/нижние боковые/верхние боковые)
+    int sideLowerSeats;
+    int sideUpperSeats;
 
   public:
     PlatskartCarriage();
-    PlatskartCarriage(int carriageNumber, int mLower = 18, int mUpper = 18, int sLower = 9,
+    PlatskartCarriage(int carriageNumber, int lower = 18, int upper = 18, int sLower = 9,
                       int sUpper = 9);
 
-    const PlatskartSeatConfig &getPlatskartSeats() const;
-    void setPlatskartSeats(const PlatskartSeatConfig &seats);
+    int getSideLowerSeats() const;
+    int getSideUpperSeats() const;
+    int getTotalSeats() const override;
+
+    void setSideLowerSeats(int sLower);
+    void setSideUpperSeats(int sUpper);
 
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;

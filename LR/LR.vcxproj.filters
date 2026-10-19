@@ -33,7 +33,7 @@
     <ClCompile Include="src\Train.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\SeatConfig.cpp">
+    <ClCompile Include="src\PassengerCarriage.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +51,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="headers\Train.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\PassengerCarriage.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

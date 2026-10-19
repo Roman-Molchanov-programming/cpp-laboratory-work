@@ -273,7 +273,7 @@ int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    auto carriage1 = make_shared<CompartmentCarriage>(101, 9);
+    auto carriage1 = make_shared<CompartmentCarriage>(101, 18, 18);
     auto carriage2 = make_shared<PlatskartCarriage>(102, 18);
     auto carriage3 = make_shared<SeatingCarriage>(201, 25);
 
