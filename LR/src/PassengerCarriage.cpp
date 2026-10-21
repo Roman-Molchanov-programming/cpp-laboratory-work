@@ -16,9 +16,6 @@ int PassengerCarriage::getLowerSeats() const {
 int PassengerCarriage::getUpperSeats() const {
     return upperSeats;
 }
-int PassengerCarriage::getTotalSeats() const {
-    return lowerSeats + upperSeats;
-}
 
 void PassengerCarriage::setLowerSeats(int lower) {
     lowerSeats = lower;
@@ -27,21 +24,13 @@ void PassengerCarriage::setUpperSeats(int upper) {
     upperSeats = upper;
 }
 
-bool PassengerCarriage::isEqual(const Carriage &other) const {
-    if (!Carriage::isEqual(other)) {
-        return false;
-    }
-    const auto *p = dynamic_cast<const PassengerCarriage *>(&other);
-    return p != nullptr && this->lowerSeats == p->lowerSeats && this->upperSeats == p->upperSeats;
-}
-
-void PassengerCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон №" << getNumber() << " | Тип: " << getType() << " | Нижних: " << lowerSeats
-       << ", Верхних: " << upperSeats;
-}
-
 void PassengerCarriage::inputVirtualData(istream &is) {
-    Carriage::inputVirtualData(is);
+    cout << "Введите номер вагона: ";
+    while (!(is >> number)) {
+        cout << "Ошибка! Введите числовой номер: ";
+        is.clear();
+        is.ignore(10000, '\n');
+    }
     cout << "Введите количество нижних мест: ";
     while (!(is >> lowerSeats) || lowerSeats < 0) {
         cout << "Ошибка! Введите корректное число: ";

@@ -9,19 +9,17 @@ class PlatskartCarriage : public PassengerCarriage {
 
   public:
     PlatskartCarriage();
-    PlatskartCarriage(int carriageNumber, int lower = 18, int upper = 18, int sLower = 9,
-                      int sUpper = 9);
+    PlatskartCarriage(int carriageNumber, int sideSeats);
+    PlatskartCarriage(int carriageNumber, int lower, int upper, int sideLower, int sideUpper);
 
     int getSideLowerSeats() const;
     int getSideUpperSeats() const;
-    int getTotalSeats() const override;
 
-    void setSideLowerSeats(int sLower);
-    void setSideUpperSeats(int sUpper);
+    void setSideLowerSeats(int sideLower);
+    void setSideUpperSeats(int sideUpper);
 
+    std::string getComfortCategory() const override;
+    int calculateTotalSeats() const override;
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;
-
-  protected:
-    bool isEqual(const Carriage &other) const override;
 };

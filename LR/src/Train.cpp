@@ -1,8 +1,9 @@
 #include "../headers/Train.h"
+#include <algorithm>
 
 using namespace std;
 
-Train::Train() : driver("Не назначен"), maxCarriages(0) {
+Train::Train() : driver("Неизвестно"), maxCarriages(10) {
 }
 
 Train::Train(string_view driverName, int maxCapacity)
@@ -10,29 +11,28 @@ Train::Train(string_view driverName, int maxCapacity)
 }
 
 string Train::getDriver() const {
-    return this->driver;
+    return driver;
 }
 void Train::setDriver(string_view newDriver) {
-    this->driver = newDriver;
+    driver = newDriver;
 }
 
 int Train::getMaxCarriages() const {
-    return this->maxCarriages;
+    return maxCarriages;
 }
 void Train::setMaxCarriages(int newMaxCarriages) {
-    this->maxCarriages = newMaxCarriages;
+    maxCarriages = newMaxCarriages;
 }
 
 int Train::getCurrentCarriageCount() const {
-    return static_cast<int>(this->carriages.size());
+    return static_cast<int>(carriages.size());
 }
 
 vector<shared_ptr<Carriage>> &Train::getCarriages() {
-    return this->carriages;
+    return carriages;
 }
-
 const vector<shared_ptr<Carriage>> &Train::getCarriages() const {
-    return this->carriages;
+    return carriages;
 }
 
 void Train::inputData() {
@@ -40,13 +40,10 @@ void Train::inputData() {
 }
 
 bool Train::addCarriage(const shared_ptr<Carriage> &carriage) {
-    if (this->carriages.size() >= static_cast<size_t>(this->maxCarriages)) {
-        cout << "\nНе удалось добавить вагон: достигнут лимит поезда (" << this->maxCarriages
-             << " ваг.)\n";
+    if (carriages.size() >= static_cast<size_t>(maxCarriages) || !carriage) {
         return false;
     }
-    this->carriages.push_back(carriage);
-    cout << "\nВагон успешно добавлен в состав.\n";
+    carriages.push_back(carriage);
     return true;
 }
 
@@ -55,39 +52,49 @@ void Train::printInfo() const {
 }
 
 bool Train::operator==(const Train &other) const {
-    if (this->driver != other.driver || this->maxCarriages != other.maxCarriages ||
-        this->carriages.size() != other.carriages.size()) {
+    if (driver != other.driver || carriages.size() != other.carriages.size()) {
         return false;
     }
-    for (size_t i = 0; i < this->carriages.size(); ++i) {
-        if (*this->carriages[i] != *other.carriages[i]) {
+    for (size_t i = 0; i < carriages.size(); ++i) {
+        if (*carriages[i] != *other.carriages[i]) {
             return false;
         }
     }
     return true;
 }
 
-std::strong_ordering Train::operator<=>(const Train &other) const {
-    return this->carriages.size() <=> other.carriages.size();
+strong_ordering Train::operator<=>(const Train &other) const {
+    return carriages.size() <=> other.carriages.size();
 }
 
 Train &Train::operator+=(const shared_ptr<Carriage> &carriage) {
-    this->addCarriage(carriage);
+    addCarriage(carriage);
+    return *this;
+}
+
+Train &Train::operator-=(int carriageNumber) {
+    auto it = remove_if(carriages.begin(), carriages.end(),
+                        [carriageNumber](const shared_ptr<Carriage> &c) {
+                            return c && c->getNumber() == carriageNumber;
+                        });
+    if (it != carriages.end()) {
+        carriages.erase(it, carriages.end());
+    }
+    return *this;
+}
+
+Train &Train::operator-=(const shared_ptr<Carriage> &carriage) {
+    if (carriage) {
+        *this -= carriage->getNumber();
+    }
     return *this;
 }
 
 Train &Train::operator-=(const Carriage &carriage) {
-    for (auto it = this->carriages.begin(); it != this->carriages.end(); ++it) {
-        if ((*it)->getNumber() == carriage.getNumber()) {
-            this->carriages.erase(it);
-            cout << "Вагон успешно удален из поезда!\n";
-            return *this;
-        }
-    }
-    cout << "Вагон не найден в составе поезда!\n";
+    *this -= carriage.getNumber();
     return *this;
 }
 
 bool compareTrainCapacity(const Train &t1, const Train &t2) {
-    return t1.maxCarriages == t2.maxCarriages;
+    return t1.carriages.size() < t2.carriages.size();
 }

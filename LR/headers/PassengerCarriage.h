@@ -3,7 +3,7 @@
 #include "Carriage.h"
 
 class PassengerCarriage : public Carriage {
-  private:
+  protected:
     int lowerSeats;
     int upperSeats;
 
@@ -13,14 +13,9 @@ class PassengerCarriage : public Carriage {
 
     int getLowerSeats() const;
     int getUpperSeats() const;
-    int getTotalSeats() const override;
 
     void setLowerSeats(int lower);
     void setUpperSeats(int upper);
 
-    void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;
-
-  protected:
-    bool isEqual(const Carriage &other) const override;
 };

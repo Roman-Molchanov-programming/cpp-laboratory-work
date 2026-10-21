@@ -9,17 +9,17 @@ class SeatingCarriage : public Carriage {
 
   public:
     SeatingCarriage();
-    SeatingCarriage(int carriageNumber, int rows, int perRow = 3);
+    SeatingCarriage(int carriageNumber, int rows);
+    SeatingCarriage(int carriageNumber, int rows, int seatsInRow);
 
     int getRowsCount() const;
     int getSeatsPerRow() const;
-    int getTotalSeats() const override;
-    void setRowsCount(int rows);
-    void setSeatsPerRow(int perRow);
 
+    void setRowsCount(int rows);
+    void setSeatsPerRow(int seatsInRow);
+
+    std::string getComfortCategory() const override;
+    int calculateTotalSeats() const override;
     void printVirtualInfo(std::ostream &os) const override;
     void inputVirtualData(std::istream &is) override;
-
-  protected:
-    bool isEqual(const Carriage &other) const override;
 };

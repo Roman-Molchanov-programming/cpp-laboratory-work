@@ -6,10 +6,15 @@ PlatskartCarriage::PlatskartCarriage()
     : PassengerCarriage("Плацкарт", 0, 18, 18), sideLowerSeats(9), sideUpperSeats(9) {
 }
 
-PlatskartCarriage::PlatskartCarriage(int carriageNumber, int lower, int upper, int sLower,
-                                     int sUpper)
-    : PassengerCarriage("Плацкарт", carriageNumber, lower, upper), sideLowerSeats(sLower),
-      sideUpperSeats(sUpper) {
+PlatskartCarriage::PlatskartCarriage(int carriageNumber, int sideSeats)
+    : PassengerCarriage("Плацкарт", carriageNumber, 18, 18), sideLowerSeats(sideSeats / 2),
+      sideUpperSeats(sideSeats - (sideSeats / 2)) {
+}
+
+PlatskartCarriage::PlatskartCarriage(int carriageNumber, int lower, int upper, int sideLower,
+                                     int sideUpper)
+    : PassengerCarriage("Плацкарт", carriageNumber, lower, upper), sideLowerSeats(sideLower),
+      sideUpperSeats(sideUpper) {
 }
 
 int PlatskartCarriage::getSideLowerSeats() const {
@@ -19,30 +24,25 @@ int PlatskartCarriage::getSideUpperSeats() const {
     return sideUpperSeats;
 }
 
-int PlatskartCarriage::getTotalSeats() const {
-    return PassengerCarriage::getTotalSeats() + sideLowerSeats + sideUpperSeats;
+void PlatskartCarriage::setSideLowerSeats(int sideLower) {
+    sideLowerSeats = sideLower;
+}
+void PlatskartCarriage::setSideUpperSeats(int sideUpper) {
+    sideUpperSeats = sideUpper;
 }
 
-void PlatskartCarriage::setSideLowerSeats(int sLower) {
-    sideLowerSeats = sLower;
-}
-void PlatskartCarriage::setSideUpperSeats(int sUpper) {
-    sideUpperSeats = sUpper;
+string PlatskartCarriage::getComfortCategory() const {
+    return "Стандарт (Плацкарт)";
 }
 
-bool PlatskartCarriage::isEqual(const Carriage &other) const {
-    if (!PassengerCarriage::isEqual(other)) {
-        return false;
-    }
-    const auto *p = dynamic_cast<const PlatskartCarriage *>(&other);
-    return p != nullptr && this->sideLowerSeats == p->sideLowerSeats &&
-           this->sideUpperSeats == p->sideUpperSeats;
+int PlatskartCarriage::calculateTotalSeats() const {
+    return lowerSeats + upperSeats + sideLowerSeats + sideUpperSeats;
 }
 
 void PlatskartCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Вагон Плацкарт №" << getNumber() << " | Нижних: " << getLowerSeats()
-       << ", Верхних: " << getUpperSeats() << " | Боковых нижних: " << sideLowerSeats
-       << ", Боковых верхних: " << sideUpperSeats;
+    os << "  Вагон Плацкарт №" << getNumber() << " | Категория: " << getComfortCategory()
+       << " | Всего мест: " << calculateTotalSeats() << " (Основные: " << lowerSeats << "/"
+       << upperSeats << ", Боковые: " << sideLowerSeats << "/" << sideUpperSeats << ")";
 }
 
 void PlatskartCarriage::inputVirtualData(istream &is) {

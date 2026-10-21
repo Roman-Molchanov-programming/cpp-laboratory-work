@@ -2,51 +2,55 @@
 
 using namespace std;
 
-SeatingCarriage::SeatingCarriage() : Carriage("Сидячий", 0), rowsCount(20), seatsPerRow(3) {
+SeatingCarriage::SeatingCarriage() : Carriage("Сидячий", 0), rowsCount(15), seatsPerRow(4) {
 }
 
-SeatingCarriage::SeatingCarriage(int carriageNumber, int rows, int perRow)
-    : Carriage("Сидячий", carriageNumber), rowsCount(rows), seatsPerRow(perRow) {
+SeatingCarriage::SeatingCarriage(int carriageNumber, int rows)
+    : Carriage("Сидячий", carriageNumber), rowsCount(rows), seatsPerRow(4) {
+}
+
+SeatingCarriage::SeatingCarriage(int carriageNumber, int rows, int seatsInRow)
+    : Carriage("Сидячий", carriageNumber), rowsCount(rows), seatsPerRow(seatsInRow) {
 }
 
 int SeatingCarriage::getRowsCount() const {
     return rowsCount;
 }
-
 int SeatingCarriage::getSeatsPerRow() const {
     return seatsPerRow;
-}
-
-int SeatingCarriage::getTotalSeats() const {
-    return rowsCount * seatsPerRow;
 }
 
 void SeatingCarriage::setRowsCount(int rows) {
     rowsCount = rows;
 }
-
-void SeatingCarriage::setSeatsPerRow(int perRow) {
-    seatsPerRow = perRow;
+void SeatingCarriage::setSeatsPerRow(int seatsInRow) {
+    seatsPerRow = seatsInRow;
 }
 
-bool SeatingCarriage::isEqual(const Carriage &other) const {
-    if (!Carriage::isEqual(other)) {
-        return false;
-    }
-    const auto *s = dynamic_cast<const SeatingCarriage *>(&other);
-    return s != nullptr && this->rowsCount == s->rowsCount && this->seatsPerRow == s->seatsPerRow;
+string SeatingCarriage::getComfortCategory() const {
+    return "Эконом (Сидячий)";
+}
+
+int SeatingCarriage::calculateTotalSeats() const {
+    return rowsCount * seatsPerRow;
 }
 
 void SeatingCarriage::printVirtualInfo(ostream &os) const {
-    os << "  Сидячий вагон №" << getNumber() << " | Рядов: " << rowsCount
-       << " | Мест в ряду: " << seatsPerRow << " | Всего мест: " << getTotalSeats();
+    os << "  Вагон Сидячий №" << getNumber() << " | Категория: " << getComfortCategory()
+       << " | Всего мест: " << calculateTotalSeats() << " (Рядов: " << rowsCount
+       << ", Мест в ряду: " << seatsPerRow << ")";
 }
 
 void SeatingCarriage::inputVirtualData(istream &is) {
-    Carriage::inputVirtualData(is);
+    cout << "Введите номер вагона: ";
+    while (!(is >> number)) {
+        cout << "Ошибка! Введите числовой номер: ";
+        is.clear();
+        is.ignore(10000, '\n');
+    }
     cout << "Введите количество рядов кресел: ";
     while (!(is >> rowsCount) || rowsCount <= 0) {
-        cout << "Ошибка! Введите положительное число рядов: ";
+        cout << "Ошибка! Введите положительное число: ";
         is.clear();
         is.ignore(10000, '\n');
     }

@@ -34,6 +34,8 @@ class Train {
     std::strong_ordering operator<=>(const Train &other) const;
 
     Train &operator+=(const std::shared_ptr<Carriage> &carriage);
+    Train &operator-=(int carriageNumber);
+    Train &operator-=(const std::shared_ptr<Carriage> &carriage);
     Train &operator-=(const Carriage &carriage);
 
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
