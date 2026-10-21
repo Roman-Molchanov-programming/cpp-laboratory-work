@@ -6,7 +6,7 @@
 #include <string_view>
 
 class Carriage {
-  protected:
+  private:
     std::string type;
     int number;
 

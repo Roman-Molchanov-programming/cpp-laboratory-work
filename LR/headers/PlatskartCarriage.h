@@ -4,11 +4,12 @@
 
 class PlatskartCarriage : public PassengerCarriage {
   private:
-    int sideLowerSeats;
-    int sideUpperSeats;
+    int sideLowerSeats = 9;
+    int sideUpperSeats = 9;
 
   public:
     PlatskartCarriage();
+    PlatskartCarriage(int carriageNumber);
     PlatskartCarriage(int carriageNumber, int sideSeats);
     PlatskartCarriage(int carriageNumber, int lower, int upper, int sideLower, int sideUpper);
 

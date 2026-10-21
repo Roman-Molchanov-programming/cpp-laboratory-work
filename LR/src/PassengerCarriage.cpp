@@ -26,11 +26,14 @@ void PassengerCarriage::setUpperSeats(int upper) {
 
 void PassengerCarriage::inputVirtualData(istream &is) {
     cout << "Введите номер вагона: ";
-    while (!(is >> number)) {
+    int inputNum = 0;
+    while (!(is >> inputNum)) {
         cout << "Ошибка! Введите числовой номер: ";
         is.clear();
         is.ignore(10000, '\n');
     }
+    setNumber(inputNum);
+
     cout << "Введите количество нижних мест: ";
     while (!(is >> lowerSeats) || lowerSeats < 0) {
         cout << "Ошибка! Введите корректное число: ";

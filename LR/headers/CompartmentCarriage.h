@@ -5,7 +5,8 @@
 class CompartmentCarriage : public PassengerCarriage {
   public:
     CompartmentCarriage();
-    CompartmentCarriage(int carriageNumber, int lower = 18, int upper = 18);
+    CompartmentCarriage(int carriageNumber);
+    CompartmentCarriage(int carriageNumber, int lower, int upper);
 
     int getCompartmentsCount() const;
 

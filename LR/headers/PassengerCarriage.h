@@ -3,9 +3,9 @@
 #include "Carriage.h"
 
 class PassengerCarriage : public Carriage {
-  protected:
-    int lowerSeats;
-    int upperSeats;
+  private:
+    int lowerSeats = 0;
+    int upperSeats = 0;
 
   public:
     PassengerCarriage();

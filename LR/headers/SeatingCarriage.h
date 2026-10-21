@@ -4,11 +4,12 @@
 
 class SeatingCarriage : public Carriage {
   private:
-    int rowsCount;
-    int seatsPerRow;
+    int rowsCount = 15;
+    int seatsPerRow = 4;
 
   public:
     SeatingCarriage();
+    SeatingCarriage(int carriageNumber);
     SeatingCarriage(int carriageNumber, int rows);
     SeatingCarriage(int carriageNumber, int rows, int seatsInRow);
 

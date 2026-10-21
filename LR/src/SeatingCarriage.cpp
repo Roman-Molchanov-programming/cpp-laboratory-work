@@ -2,11 +2,14 @@
 
 using namespace std;
 
-SeatingCarriage::SeatingCarriage() : Carriage("Сидячий", 0), rowsCount(15), seatsPerRow(4) {
+SeatingCarriage::SeatingCarriage() : Carriage("Сидячий", 0) {
+}
+
+SeatingCarriage::SeatingCarriage(int carriageNumber) : Carriage("Сидячий", carriageNumber) {
 }
 
 SeatingCarriage::SeatingCarriage(int carriageNumber, int rows)
-    : Carriage("Сидячий", carriageNumber), rowsCount(rows), seatsPerRow(4) {
+    : Carriage("Сидячий", carriageNumber), rowsCount(rows) {
 }
 
 SeatingCarriage::SeatingCarriage(int carriageNumber, int rows, int seatsInRow)
@@ -43,11 +46,14 @@ void SeatingCarriage::printVirtualInfo(ostream &os) const {
 
 void SeatingCarriage::inputVirtualData(istream &is) {
     cout << "Введите номер вагона: ";
-    while (!(is >> number)) {
+    int inputNum = 0;
+    while (!(is >> inputNum)) {
         cout << "Ошибка! Введите числовой номер: ";
         is.clear();
         is.ignore(10000, '\n');
     }
+    setNumber(inputNum);
+
     cout << "Введите количество рядов кресел: ";
     while (!(is >> rowsCount) || rowsCount <= 0) {
         cout << "Ошибка! Введите положительное число: ";

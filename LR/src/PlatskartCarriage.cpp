@@ -2,8 +2,11 @@
 
 using namespace std;
 
-PlatskartCarriage::PlatskartCarriage()
-    : PassengerCarriage("Плацкарт", 0, 18, 18), sideLowerSeats(9), sideUpperSeats(9) {
+PlatskartCarriage::PlatskartCarriage() : PassengerCarriage("Плацкарт", 0, 18, 18) {
+}
+
+PlatskartCarriage::PlatskartCarriage(int carriageNumber)
+    : PassengerCarriage("Плацкарт", carriageNumber, 18, 18) {
 }
 
 PlatskartCarriage::PlatskartCarriage(int carriageNumber, int sideSeats)
@@ -36,13 +39,13 @@ string PlatskartCarriage::getComfortCategory() const {
 }
 
 int PlatskartCarriage::calculateTotalSeats() const {
-    return lowerSeats + upperSeats + sideLowerSeats + sideUpperSeats;
+    return getLowerSeats() + getUpperSeats() + sideLowerSeats + sideUpperSeats;
 }
 
 void PlatskartCarriage::printVirtualInfo(ostream &os) const {
     os << "  Вагон Плацкарт №" << getNumber() << " | Категория: " << getComfortCategory()
-       << " | Всего мест: " << calculateTotalSeats() << " (Основные: " << lowerSeats << "/"
-       << upperSeats << ", Боковые: " << sideLowerSeats << "/" << sideUpperSeats << ")";
+       << " | Всего мест: " << calculateTotalSeats() << " (Основные: " << getLowerSeats() << "/"
+       << getUpperSeats() << ", Боковые: " << sideLowerSeats << "/" << sideUpperSeats << ")";
 }
 
 void PlatskartCarriage::inputVirtualData(istream &is) {

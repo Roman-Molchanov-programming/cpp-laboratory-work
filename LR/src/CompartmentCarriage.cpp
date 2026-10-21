@@ -5,12 +5,16 @@ using namespace std;
 CompartmentCarriage::CompartmentCarriage() : PassengerCarriage("Купе", 0, 18, 18) {
 }
 
+CompartmentCarriage::CompartmentCarriage(int carriageNumber)
+    : PassengerCarriage("Купе", carriageNumber, 18, 18) {
+}
+
 CompartmentCarriage::CompartmentCarriage(int carriageNumber, int lower, int upper)
     : PassengerCarriage("Купе", carriageNumber, lower, upper) {
 }
 
 int CompartmentCarriage::getCompartmentsCount() const {
-    return lowerSeats / 2;
+    return getLowerSeats() / 2;
 }
 
 string CompartmentCarriage::getComfortCategory() const {
@@ -18,11 +22,11 @@ string CompartmentCarriage::getComfortCategory() const {
 }
 
 int CompartmentCarriage::calculateTotalSeats() const {
-    return lowerSeats + upperSeats;
+    return getLowerSeats() + getUpperSeats();
 }
 
 void CompartmentCarriage::printVirtualInfo(ostream &os) const {
     os << "  Вагон Купе №" << getNumber() << " | Категория: " << getComfortCategory()
        << " | Купе: " << getCompartmentsCount() << " | Всего мест: " << calculateTotalSeats()
-       << " (Нижних: " << lowerSeats << ", Верхних: " << upperSeats << ")";
+       << " (Нижних: " << getLowerSeats() << ", Верхних: " << getUpperSeats() << ")";
 }
