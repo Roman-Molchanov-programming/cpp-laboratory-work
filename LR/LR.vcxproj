@@ -29,11 +29,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Carriage.h" />
+    <ClInclude Include="headers\Collection.h" />
     <ClInclude Include="headers\CompartmentCarriage.h" />
     <ClInclude Include="headers\PlatskartCarriage.h" />
     <ClInclude Include="headers\PassengerCarriage.h" />
     <ClInclude Include="headers\SeatingCarriage.h" />
     <ClInclude Include="headers\Train.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\Collection.tpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

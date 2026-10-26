@@ -21,6 +21,7 @@ static void printMenu() {
     cout << "7. Удалить вагон из поезда (используя -=)" << endl;
     cout << "8. Удалить поезд из системы" << endl;
     cout << "9. Сравнить поезда по загрузке и вместимости" << endl;
+    cout << "10. Демонстрация работы шаблонного класса Collection<T>" << endl;
     cout << "0. Выход" << endl;
     cout << "===========================" << endl;
     cout << "Выберите пункт меню: ";
@@ -218,8 +219,13 @@ static void handleDeleteCarriage(vector<shared_ptr<Train>> &trains) {
         return;
     }
 
-    SeatingCarriage dummyCarriage(carNum, 0);
-    *train -= dummyCarriage;
+    int removedCount = *train -= carNum;
+
+    if (removedCount > 0) {
+        cout << "Вагон №" << carNum << " успешно удален!" << endl;
+    } else {
+        cout << "Вагон с номером " << carNum << " не найден в этом поезде!" << endl;
+    }
 }
 
 static void handleDeleteTrain(vector<shared_ptr<Train>> &trains) {
@@ -267,6 +273,32 @@ static void handleCompareTrains(const vector<shared_ptr<Train>> &trains) {
     } else {
         cout << "[Дружественная функция] Максимальная вместимость поездов различается." << endl;
     }
+}
+
+static void handleDemonstrateTemplates(const vector<shared_ptr<Train>> &trains) {
+    cout << "\n=== ДЕМОНСТРАЦИЯ ШАБЛОНА Collection<T> ===" << endl;
+
+    Collection<shared_ptr<Train>> trainCol;
+    for (const auto &t : trains) {
+        trainCol.add(t);
+    }
+    cout << "\n1. Коллекция поездов (Collection<shared_ptr<Train>>):" << endl;
+    trainCol.print();
+
+    Collection<shared_ptr<Carriage>> carriageCol;
+    for (const auto &t : trains) {
+        for (const auto &c : t->getCarriages()) {
+            carriageCol.add(c);
+        }
+    }
+
+    cout << "\n2. Коллекция всех вагонов в системе (Collection<shared_ptr<Carriage>>):" << endl;
+    if (carriageCol.empty()) {
+        cout << "(Нет вагонов)" << endl;
+    } else {
+        carriageCol.print();
+    }
+    cout << endl;
 }
 
 int main() {
@@ -325,6 +357,9 @@ int main() {
             break;
         case 9:
             handleCompareTrains(trains);
+            break;
+        case 10:
+            handleDemonstrateTemplates(trains);
             break;
         case 0:
             cout << endl << "Завершение работы программы." << endl;

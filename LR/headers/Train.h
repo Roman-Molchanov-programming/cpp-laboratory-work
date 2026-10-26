@@ -1,16 +1,18 @@
 #pragma once
 
 #include "Carriage.h"
+#include "Collection.h"
 #include <compare>
 #include <iostream>
 #include <memory>
-#include <vector>
+#include <string>
+#include <string_view>
 
 class Train {
   private:
     std::string driver;
     int maxCarriages;
-    std::vector<std::shared_ptr<Carriage>> carriages;
+    Collection<std::shared_ptr<Carriage>> carriages;
 
   public:
     Train();
@@ -23,8 +25,8 @@ class Train {
     void setMaxCarriages(int newMaxCarriages);
 
     int getCurrentCarriageCount() const;
-    std::vector<std::shared_ptr<Carriage>> &getCarriages();
-    const std::vector<std::shared_ptr<Carriage>> &getCarriages() const;
+    Collection<std::shared_ptr<Carriage>> &getCarriages();
+    const Collection<std::shared_ptr<Carriage>> &getCarriages() const;
 
     void inputData();
     bool addCarriage(const std::shared_ptr<Carriage> &carriage);
@@ -34,9 +36,9 @@ class Train {
     std::strong_ordering operator<=>(const Train &other) const;
 
     Train &operator+=(const std::shared_ptr<Carriage> &carriage);
-    Train &operator-=(int carriageNumber);
-    Train &operator-=(const std::shared_ptr<Carriage> &carriage);
-    Train &operator-=(const Carriage &carriage);
+    int operator-=(int carriageNumber);
+    int operator-=(const std::shared_ptr<Carriage> &carriage);
+    int operator-=(const Carriage &carriage);
 
     friend std::ostream &operator<<(std::ostream &os, const Train &train) {
         os << "\n---------------------------------------\n";

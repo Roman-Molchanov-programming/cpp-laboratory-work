@@ -28,10 +28,10 @@ int Train::getCurrentCarriageCount() const {
     return static_cast<int>(carriages.size());
 }
 
-vector<shared_ptr<Carriage>> &Train::getCarriages() {
+Collection<shared_ptr<Carriage>> &Train::getCarriages() {
     return carriages;
 }
-const vector<shared_ptr<Carriage>> &Train::getCarriages() const {
+const Collection<shared_ptr<Carriage>> &Train::getCarriages() const {
     return carriages;
 }
 
@@ -43,7 +43,7 @@ bool Train::addCarriage(const shared_ptr<Carriage> &carriage) {
     if (carriages.size() >= static_cast<size_t>(maxCarriages) || !carriage) {
         return false;
     }
-    carriages.push_back(carriage);
+    carriages.add(carriage);
     return true;
 }
 
@@ -72,27 +72,21 @@ Train &Train::operator+=(const shared_ptr<Carriage> &carriage) {
     return *this;
 }
 
-Train &Train::operator-=(int carriageNumber) {
-    auto it = remove_if(carriages.begin(), carriages.end(),
-                        [carriageNumber](const shared_ptr<Carriage> &c) {
-                            return c && c->getNumber() == carriageNumber;
-                        });
-    if (it != carriages.end()) {
-        carriages.erase(it, carriages.end());
-    }
-    return *this;
+int Train::operator-=(int carriageNumber) {
+    return static_cast<int>(carriages.removeIf([carriageNumber](const shared_ptr<Carriage> &c) {
+        return c && c->getNumber() == carriageNumber;
+    }));
 }
 
-Train &Train::operator-=(const shared_ptr<Carriage> &carriage) {
+int Train::operator-=(const shared_ptr<Carriage> &carriage) {
     if (carriage) {
-        *this -= carriage->getNumber();
+        return *this -= carriage->getNumber();
     }
-    return *this;
+    return 0;
 }
 
-Train &Train::operator-=(const Carriage &carriage) {
-    *this -= carriage.getNumber();
-    return *this;
+int Train::operator-=(const Carriage &carriage) {
+    return *this -= carriage.getNumber();
 }
 
 bool compareTrainCapacity(const Train &t1, const Train &t2) {
