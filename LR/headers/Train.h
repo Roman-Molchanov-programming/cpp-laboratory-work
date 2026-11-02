@@ -5,6 +5,7 @@
 #include <compare>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -31,6 +32,14 @@ class Train {
     void inputData();
     bool addCarriage(const std::shared_ptr<Carriage> &carriage);
     void printInfo() const;
+
+    template <typename Pred> const std::shared_ptr<Carriage> *findCarriageIf(Pred pred) const {
+        return carriages.findIf(pred);
+    }
+
+    template <typename Pred> std::optional<std::size_t> findCarriageIndexIf(Pred pred) const {
+        return carriages.findIndex(pred);
+    }
 
     bool operator==(const Train &other) const;
     std::strong_ordering operator<=>(const Train &other) const;

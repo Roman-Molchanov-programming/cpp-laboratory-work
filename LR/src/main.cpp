@@ -22,6 +22,7 @@ static void printMenu() {
     cout << "8. Удалить поезд из системы" << endl;
     cout << "9. Сравнить поезда по загрузке и вместимости" << endl;
     cout << "10. Демонстрация работы шаблонного класса Collection<T>" << endl;
+    cout << "11. Найти вагон в поезде по предикату" << endl;
     cout << "0. Выход" << endl;
     cout << "===========================" << endl;
     cout << "Выберите пункт меню: ";
@@ -301,6 +302,83 @@ static void handleDemonstrateTemplates(const vector<shared_ptr<Train>> &trains) 
     cout << endl;
 }
 
+static void handleFindCarriage(const vector<shared_ptr<Train>> &trains) {
+    if (trains.empty()) {
+        cout << endl << "Список поездов пуст." << endl;
+        return;
+    }
+
+    cout << endl << "Выберите номер поезда (от 1 до " << trains.size() << "): ";
+    size_t tIdx = 0;
+    if (!(cin >> tIdx) || tIdx < 1 || tIdx > trains.size()) {
+        cout << "Некорректный номер поезда!" << endl;
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return;
+    }
+
+    cout << "\nПо какому критерию искать вагон?\n"
+         << "1. По номеру вагона\n"
+         << "2. По типу вагона (подстрока)\n"
+         << "3. По категории комфорта (подстрока)\n"
+         << "Ваш выбор: ";
+
+    int criterion = 0;
+    if (!(cin >> criterion)) {
+        cout << "Некорректный ввод!" << endl;
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return;
+    }
+
+    const auto &train = trains[tIdx - 1];
+    const shared_ptr<Carriage> *found = nullptr;
+
+    if (criterion == 1) {
+        int num = 0;
+        cout << "Введите номер вагона: ";
+        if (!(cin >> num)) {
+            cout << "Некорректный ввод!" << endl;
+            cin.clear();
+            cin.ignore(10000, '\n');
+            return;
+        }
+        found = train->findCarriageIf(
+            [num](const shared_ptr<Carriage> &c) { return c && c->getNumber() == num; });
+        auto idx = train->findCarriageIndexIf(
+            [num](const shared_ptr<Carriage> &c) { return c && c->getNumber() == num; });
+        if (idx) {
+            cout << "Индекс в коллекции: " << *idx << endl;
+        }
+
+    } else if (criterion == 2) {
+        string sub;
+        cout << "Введите подстроку типа: ";
+        cin >> sub;
+        found = train->findCarriageIf([sub](const shared_ptr<Carriage> &c) {
+            return c && c->getType().find(sub) != string::npos;
+        });
+
+    } else if (criterion == 3) {
+        string sub;
+        cout << "Введите подстроку категории: ";
+        cin >> sub;
+        found = train->findCarriageIf([sub](const shared_ptr<Carriage> &c) {
+            return c && c->getComfortCategory().find(sub) != string::npos;
+        });
+
+    } else {
+        cout << "Неизвестный критерий." << endl;
+        return;
+    }
+
+    if (found) {
+        cout << "\n✅ Найден вагон:\n" << **found << endl;
+    } else {
+        cout << "\n❌ Вагон, удовлетворяющий условию, не найден." << endl;
+    }
+}
+
 int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
@@ -360,6 +438,9 @@ int main() {
             break;
         case 10:
             handleDemonstrateTemplates(trains);
+            break;
+        case 11:
+            handleFindCarriage(trains);
             break;
         case 0:
             cout << endl << "Завершение работы программы." << endl;
